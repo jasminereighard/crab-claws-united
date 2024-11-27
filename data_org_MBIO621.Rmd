@@ -1,0 +1,1261 @@
+---
+title: "data_org_MBIO621"
+author: "Jasmine Reighard"
+date: "2024-11-03"
+output:
+  word_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+#Step 1: Set working directory 
+#> Click "Session" tab at the very top of your screen
+#> Set working directory
+#> Choose directory...
+#> mbio621 folder
+#> Open
+
+#Load all necessary libraries
+#if you dont have any of them, go to packages tab, then click install
+
+## Libraries
+require(ggplot2)
+require(dplyr)
+require(performance)
+require(mclust) #SMR
+require(tidyr)
+
+```
+
+```{r}
+
+#Loading calculate SMR function from (Chabot et al 2016)
+#y is column for mo2
+#single file for each fish, one summary file for publication
+#set G to = 2, double norm
+
+calcSMR = function(Y, q=c(0.1,0.15,0.2,0.25,0.3), G=1:4){
+	u = sort(Y)
+	the.Mclust <- Mclust(Y,  G=G)
+	cl <- the.Mclust$classification
+	# sometimes, the class containing SMR is not called 1
+	# the following presumes that when class 1 contains > 10% of cases, 
+	# it contains SMR, otherwise we take class 2
+	cl2 <- as.data.frame(table(cl))
+	cl2$cl <- as.numeric(levels(cl2$cl))
+	valid <- cl2$Freq>=0.1*length(time)  
+	the.cl <- min(cl2$cl[valid])
+	left.distr <- Y[the.Mclust$classification==the.cl]
+	mlnd = the.Mclust$parameters$mean[the.cl]
+	CVmlnd = sd(left.distr)/mlnd * 100
+	quant=quantile(Y, q)
+	low10=mean(u[1:10])
+	low10pc = mean(u[6:(5 + round(0.1*(length(u)-5)))])
+	# remove 5 outliers, keep lowest 10% of the rest, average
+	# Herrmann & Enders 2000
+	return(list(mlnd=mlnd, quant=quant, low10=low10, low10pc=low10pc,
+		      cl=cl, CVmlnd=CVmlnd))}
+```
+
+
+```{r}
+#Import csv files and create dataframes
+
+#e.g.
+
+#Control group smr .csv, sometimes you have to write the entire file path to get it to load
+#CHANGE TO YOUR OWN FILE PATH :)
+
+resp_SMR_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C1.csv", stringsAsFactors = FALSE)
+resp_SMR_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C2.csv", stringsAsFactors = FALSE)
+resp_SMR_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C3.csv", stringsAsFactors = FALSE)
+
+#Load MMR
+
+
+```
+
+
+```{r}
+#Convert date to date-time format: Control
+
+resp_SMR_C1$Clock.TIME <- as.POSIXct(resp_SMR_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+resp_SMR_C2$Clock.TIME <- as.POSIXct(resp_SMR_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+resp_SMR_C3$Clock.TIME <- as.POSIXct(resp_SMR_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#str(resp_SMR_C1)
+
+```
+
+```{r}
+
+#create individual DFs based on unique fish_id values and filter for R.2 values above 0.95.
+
+# Define the function to process a dataset
+process_dataset <- function(dataset) {
+  # Get unique fish IDs
+  id <- unique(dataset$fish_id)
+  
+  # Loop through each unique fish_id and create individual filtered dataframes
+  for (i in 1:length(id)) {
+    assign(id[i], subset(dataset, fish_id == id[i] & R.2 >= 0.95), envir = .GlobalEnv)
+  }
+}
+
+#Write out all datasets you want this applied to 
+# Apply the function to each dataset
+
+#smr_datasets <- list(resp_SMR_t1)
+#lapply(smr_datasets, process_dataset)
+
+
+#How you would write it with multiple datasets
+
+smr_datasets <- list(resp_SMR_C1, resp_SMR_C2, resp_SMR_C3)
+lapply(smr_datasets, process_dataset)
+
+
+```
+
+
+```{r}
+#Load MMR files
+#MMR c1
+MMR_TC1_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC1_C1.csv", stringsAsFactors = FALSE)
+MMR_TC2_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC2_C1.csv", stringsAsFactors = FALSE)
+MMR_TC3_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_C1.csv", stringsAsFactors = FALSE)
+MMR_TC4_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC4_C1.csv", stringsAsFactors = FALSE)
+
+
+#MMR C2
+MMR_TC1_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC1_C2.csv", stringsAsFactors = FALSE)
+MMR_TC2_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC2_C2.csv", stringsAsFactors = FALSE)
+MMR_TC3_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_C2.csv", stringsAsFactors = FALSE)
+MMR_TC4_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC4_C2.csv", stringsAsFactors = FALSE)
+
+
+#MMR C3
+MMR_TC1_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC1_C3.csv", stringsAsFactors = FALSE)
+MMR_TC2_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC2_C3.csv", stringsAsFactors = FALSE)
+MMR_TC3_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_C3.csv", stringsAsFactors = FALSE)
+
+```
+
+```{r}
+#convert date to date-time format for MMR dfs
+#trial 1 pre
+MMR_TC1_C1$Clock.TIME <- as.POSIXct(MMR_TC1_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC2_C1$Clock.TIME <- as.POSIXct(MMR_TC2_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC3_C1$Clock.TIME <- as.POSIXct(MMR_TC3_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC4_C1$Clock.TIME <- as.POSIXct(MMR_TC4_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 2 pre
+MMR_TC1_C2$Clock.TIME <- as.POSIXct(MMR_TC1_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC2_C2$Clock.TIME <- as.POSIXct(MMR_TC2_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC3_C2$Clock.TIME <- as.POSIXct(MMR_TC3_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC4_C2$Clock.TIME <- as.POSIXct(MMR_TC4_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trail 3 (pilot)
+MMR_TC1_C3$Clock.TIME <- as.POSIXct(MMR_TC1_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC2_C3$Clock.TIME <- as.POSIXct(MMR_TC2_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC3_C3$Clock.TIME <- as.POSIXct(MMR_TC3_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+```
+
+```{r}
+
+head(MMR_TC1_C1)
+#Add fish_id column and take out R.2 less than 95 to MMR dfs
+
+# List of dataframes
+df_names <- c("MMR_TC1_C1", "MMR_TC2_C1", "MMR_TC3_C1", "MMR_TC4_C1",
+              "MMR_TC1_C2", "MMR_TC2_C2", "MMR_TC3_C2", "MMR_TC4_C2",
+              "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3")
+
+# Loop through the dataframes
+for (df_name in df_names) {
+  # Extract the identifier by removing "MMR_" from the dataframe name
+  fish_id <- sub("MMR_", "", df_name)
+  
+  # Dynamically add the fish_id column and filter out rows with R.2 >= 0.95
+  filtered_df <- get(df_name) %>%
+    filter(R.2 >= 0.95) %>%  # Exclude rows with R.2 < 0.95
+    mutate(fish_id = fish_id)  # Add the fish_id column
+  
+  # Assign the modified dataframe back to the original name
+  assign(df_name, filtered_df)
+}
+
+head(MMR_TC1_C1)
+```
+
+```{r}
+#LOAD PCRIT DFS, THIS WILL REMOVE R2 >95, ADD FISH_ID COLUMN, AND REMOVES ALL DATA WHEN MO2 HITS THE NEGATIVE (WHEN WE OPENED THE CHAMBER) 
+
+# Base path for raw data files
+base_path <- "/Users/jasminereighard/Desktop/mbio621/raw_data"
+
+# Define control groups and experiment numbers
+control_groups <- c("C1", "C2", "C3")
+experiment_numbers <- 1:4
+
+# Create a list to store the data
+pcrit_data <- list()
+
+# Loop through control groups and experiment numbers
+for (control in control_groups) {
+  # Get the rawdata directory for the control group
+  rawdata_dir <- file.path(base_path, paste0(control, "_rawdata"))
+  
+  # Get the subdirectories in the rawdata directory
+  experiment_dirs <- list.dirs(rawdata_dir, recursive = FALSE, full.names = TRUE)
+  
+  # Find the directory that starts with "Experiment_PCRIT_TC_"
+  experiment_dir <- grep("Experiment_PCRIT_TC_", experiment_dirs, value = TRUE)
+  
+  if (length(experiment_dir) == 1) {
+    for (exp_num in experiment_numbers) {
+      # Construct the file path
+      file_path <- file.path(experiment_dir, paste0("Summary data resp ", exp_num, ".txt"))
+      
+      # Check if the file exists
+      if (file.exists(file_path)) {
+        # Read the data
+        data <- read.table(file = file_path,
+                           skip = 15,
+                           header = TRUE,
+                           fill = TRUE,
+                           sep = ";")
+        
+        # Convert Clock.TIME to POSIXct if the column exists
+        if ("Clock.TIME" %in% colnames(data)) {
+          data$Clock.TIME <- as.POSIXct(data$Clock.TIME)
+        }
+        
+        # Add the fish_id column
+        fish_id <- paste0("TC", exp_num, "_", control)
+        data$fish_id <- fish_id
+        
+        # Filter out data points after the first negative MO2 value
+        if ("MO2" %in% colnames(data)) {
+          first_negative_index <- which(data$MO2 < 0)[1]
+          if (!is.na(first_negative_index)) {
+            data <- data[1:(first_negative_index - 1), ]
+          }
+        }
+        
+        # Filter out rows where R2 is less than 0.95
+        if ("R2" %in% colnames(data)) {
+          data <- data[data$R2 >= 0.95, ]
+        }
+        
+        # Assign the data to the list with the desired naming convention
+        list_name <- paste0("pcrit_TC", exp_num, "_", control)
+        pcrit_data[[list_name]] <- data
+      } else {
+        message("File not found: ", file_path)
+      }
+    }
+  } else {
+    message("Experiment directory not found or multiple matches for: ", rawdata_dir)
+  }
+}
+
+# Access the data using the list
+print(names(pcrit_data))  # List all the data frames loaded
+
+# Remove pcrit_TC4_C3 from the list
+pcrit_data$pcrit_TC4_C3 <- NULL
+
+# Move the dataframes in the pcrit_data list into the environment
+list2env(pcrit_data, envir = .GlobalEnv)
+
+```
+
+
+```{r}
+head(pcrit_TC1_C1)
+```
+
+```{r}
+# List of pcrit dataframes
+pcrit_names <- names(pcrit_data)
+
+# Create a list to store the new pcrit subsets
+pcrit_subsets <- list()
+
+# Loop through the pcrit dataframes
+for (name in pcrit_names) {
+  # Get the dataframe from the list
+  df <- pcrit_data[[name]]
+  
+  # Filter rows where avg.po2 >= 30
+  subset_df <- df %>% filter(avg.po2 >= 60)
+  
+  # Check if any rows remain after filtering
+  if (nrow(subset_df) == 0) {
+    message(name, " has no measurements with avg.po2 >= 50.")
+  }
+  
+  # Add the subset to the list with a new name
+  new_name <- paste0("po50_", name)
+  pcrit_subsets[[new_name]] <- subset_df
+}
+
+# Access the new subset dataframes
+print(names(pcrit_subsets))  # List the names of the new subset dataframes
+
+# Move the dataframes in the pcrit_subsets list into the environment
+list2env(pcrit_subsets, envir = .GlobalEnv)
+```
+
+
+
+```{r}
+# List of MMR and SMR dataframe names
+MMR_names <- c("MMR_TC1_C1", "MMR_TC2_C1", "MMR_TC3_C1", "MMR_TC4_C1",
+               "MMR_TC1_C2", "MMR_TC2_C2", "MMR_TC3_C2", "MMR_TC4_C2",
+               "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3")
+
+SMR_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
+               "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
+               "TC1_C3", "TC2_C3", "TC3_C3")
+
+po50_pcrit_names <- c("po50_pcrit_TC1_C1", "po50_pcrit_TC2_C1", "po50_pcrit_TC3_C1", "po50_pcrit_TC4_C1",
+               "po50_pcrit_TC1_C2", "po50_pcrit_TC2_C2", "po50_pcrit_TC3_C2", "po50_pcrit_TC4_C2",
+               "po50_pcrit_TC1_C3", "po50_pcrit_TC2_C3", "po50_pcrit_TC3_C3")
+
+# Loop through both lists to perform a left join
+for (i in seq_along(MMR_names)) {
+  # Get the MMR and SMR dataframes
+  MMR_df <- get(MMR_names[i])
+  SMR_df <- get(SMR_names[i])
+  po50_PCRIT_df <- get(po50_pcrit_names[i])
+  
+  # Add a column to prioritize the order
+  MMR_df <- MMR_df %>% mutate(priority = 1)
+  SMR_df <- SMR_df %>% mutate(priority = 2)
+  po50_PCRIT_df <- po50_PCRIT_df %>% mutate(priority = 3)
+  
+  # Combine the dataframes with left join
+  combined_df <- bind_rows(MMR_df, SMR_df, po50_PCRIT_df) %>%
+    arrange(priority) %>%  # Ensure MMR comes first
+    select(-priority)      # Remove the priority column
+  
+  # Assign the combined dataframe to the SMR name
+  assign(SMR_names[i], combined_df)
+}
+```
+
+
+```{r}
+
+
+#BACKGROUND
+#import pre and post background and create dataframes
+#The orange warning message u get is okay!! 
+
+#CHANGE TO YOUR OWN FILE PATH :)
+#>> cmd + F, 
+#>> paste /Users/jasminereighard/Desktop/mbio621/data/ into "Find"
+#>> type your own file path into "Replace" 
+#>> highlight the rest of the chunk
+#>> Select box next to "In selection"
+#>> Press "All" 
+
+#Control 25.5
+#preback c1
+preback_TC1_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC1_C1.csv", stringsAsFactors = FALSE)
+preback_TC2_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC2_C1.csv", stringsAsFactors = FALSE)
+preback_TC3_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC3_C1.csv", stringsAsFactors = FALSE)
+preback_TC4_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC4_C1.csv", stringsAsFactors = FALSE)
+
+
+#postback C1
+
+postback_TC1_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC1_C1.csv", stringsAsFactors = FALSE)
+postback_TC2_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC2_C1.csv", stringsAsFactors = FALSE)
+postback_TC3_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_C1.csv", stringsAsFactors = FALSE)
+postback_TC4_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC4_C1.csv", stringsAsFactors = FALSE)
+
+#preback C2
+preback_TC1_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC1_C2.csv", stringsAsFactors = FALSE)
+preback_TC2_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC2_C2.csv", stringsAsFactors = FALSE)
+preback_TC3_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC3_C2.csv", stringsAsFactors = FALSE)
+preback_TC4_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC4_C2.csv", stringsAsFactors = FALSE)
+
+#postback C2
+
+postback_TC1_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC1_C2.csv", stringsAsFactors = FALSE)
+postback_TC2_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC2_C2.csv", stringsAsFactors = FALSE)
+postback_TC3_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_C2.csv", stringsAsFactors = FALSE)
+postback_TC4_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC4_C2.csv", stringsAsFactors = FALSE)
+
+#preback C3
+preback_TC1_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC1_C3.csv", stringsAsFactors = FALSE)
+preback_TC2_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC2_C3.csv", stringsAsFactors = FALSE)
+preback_TC3_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC3_C3.csv", stringsAsFactors = FALSE)
+
+
+#postback C3
+
+postback_TC1_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC1_C3.csv", stringsAsFactors = FALSE)
+postback_TC2_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC2_C3.csv", stringsAsFactors = FALSE)
+postback_TC3_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_C3.csv", stringsAsFactors = FALSE)
+
+
+
+```
+
+
+```{r}
+#convert date to date-time format for background dfs
+
+#Control 25.5
+#trial 1 pre
+preback_TC1_C1$Clock.TIME <- as.POSIXct(preback_TC1_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC2_C1$Clock.TIME <- as.POSIXct(preback_TC2_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC3_C1$Clock.TIME <- as.POSIXct(preback_TC3_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC4_C1$Clock.TIME <- as.POSIXct(preback_TC4_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 1 post
+postback_TC1_C1$Clock.TIME <- as.POSIXct(postback_TC1_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC2_C1$Clock.TIME <- as.POSIXct(postback_TC2_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC3_C1$Clock.TIME <- as.POSIXct(postback_TC3_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC4_C1$Clock.TIME <- as.POSIXct(postback_TC4_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+
+#Control 25.5
+#trial 2 pre
+preback_TC1_C2$Clock.TIME <- as.POSIXct(preback_TC1_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC2_C2$Clock.TIME <- as.POSIXct(preback_TC2_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC3_C2$Clock.TIME <- as.POSIXct(preback_TC3_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC4_C2$Clock.TIME <- as.POSIXct(preback_TC4_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 2 post
+postback_TC1_C2$Clock.TIME <- as.POSIXct(postback_TC1_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC2_C2$Clock.TIME <- as.POSIXct(postback_TC2_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC3_C2$Clock.TIME <- as.POSIXct(postback_TC3_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC4_C2$Clock.TIME <- as.POSIXct(postback_TC4_C2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+
+
+#Control 26
+#trial 3 pilot!!
+preback_TC1_C3$Clock.TIME <- as.POSIXct(preback_TC1_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC2_C3$Clock.TIME <- as.POSIXct(preback_TC2_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC3_C3$Clock.TIME <- as.POSIXct(preback_TC3_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+
+#trial 3 post
+postback_TC1_C3$Clock.TIME <- as.POSIXct(postback_TC1_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC2_C3$Clock.TIME <- as.POSIXct(postback_TC2_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC3_C3$Clock.TIME <- as.POSIXct(postback_TC3_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+
+
+
+```
+
+
+```{r}
+#If you need to correct the weight of the fish, here is the code
+#Eg, Fish weighs 25.46 g, you input .40 kg in Aquaresp and prebackground MO2 measurements was above a negative value
+
+##correct weight of fish
+#C2
+true_Vre_TC1_C2 <- (0.170*1000)-9.62 #TC1_C2, corrected fish weight goes at the end
+true_Vre_TC3_C2 <- (0.170*1000)-9.34 #TC3_C2, 
+true_Vre_TC4_C2 <- (0.170*1000)-9.73 #TC4_C2, 
+
+
+#C3
+true_Vre_TC2_C3 <- (0.170*1000)-13.87 #TC2_C3, 
+true_Vre_TC3_C3 <- (0.170*1000)-9.82 #TC3_C3, 
+
+##replace Mo2 w/ initial fish weight set to 0.01 C2
+
+preback_TC1_C2$MO2 <- ((preback_TC1_C2$MO2/(0.170*1000))*10)*true_Vre_TC1_C2/9.62
+preback_TC3_C2$MO2 <- ((preback_TC3_C2$MO2/(0.170*1000))*10)*true_Vre_TC3_C2/9.34
+preback_TC4_C2$MO2 <- ((preback_TC4_C2$MO2/(0.170*1000))*10)*true_Vre_TC4_C2/9.73
+
+##replace Mo2 w/ initial fish weight set to 0.06 C3
+
+preback_TC2_C3$MO2 <- ((preback_TC2_C3$MO2/(0.170*1000))*6)*true_Vre_TC2_C3/13.87
+preback_TC3_C3$MO2 <- ((preback_TC3_C3$MO2/(0.170*1000))*6)*true_Vre_TC3_C3/9.82
+
+
+```
+
+```{r}
+#replace -Mo2 with 0 
+#no negative values!
+
+#make a function that makes preback 0 if >0 
+adjust_MO2 <- function(df) {
+  df$MO2 <- ifelse(df$MO2 <= 0, 0, df$MO2)
+  return(df)
+}
+
+
+#Make a list of dfs for prebackground & named list
+preback_list <- list(preback_TC1_C1, preback_TC2_C1, preback_TC3_C1, preback_TC4_C1, 
+                     preback_TC1_C2, preback_TC2_C2, preback_TC3_C2, preback_TC4_C2,
+                     preback_TC1_C3, preback_TC2_C3, preback_TC3_C3)
+
+#Apply adjust_MO2 to each preback df
+preback_list <- lapply(preback_list, adjust_MO2)
+
+
+#assign back to individual dfs
+names(preback_list) <- c("preback_TC1_C1", "preback_TC2_C1", "preback_TC3_C1", "preback_TC4_C1",
+                         "preback_TC1_C2", "preback_TC2_C2", "preback_TC3_C2", "preback_TC4_C2",
+                         "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3")
+
+# Assign the results back to their respective variables in the global environment
+list2env(preback_list, envir = .GlobalEnv) 
+
+#Note:
+#list2env: This function takes the elements of a list and assigns them to the global environment (or any specified environment) as individual variables.
+#preback_list: This is the list containing the results of the adjust_MO2 function applied to each dataset.
+#.GlobalEnv: This is the global environment in R, where most user-created variables and functions are stored and accessed.
+
+```
+
+```{r}
+#Now weʻre going to combine pre and post background dfs together
+
+#make a list for postbackground dfs
+postback_list <- list(postback_TC1_C1, postback_TC2_C1, postback_TC3_C1, postback_TC4_C1, 
+                     postback_TC1_C2, postback_TC2_C2, postback_TC3_C2, postback_TC4_C2,
+                     postback_TC1_C3, postback_TC2_C3, postback_TC3_C3)
+
+
+# Combine pre and post trial data frames
+combinedbg_list <- Map(rbind, preback_list, postback_list)
+
+# Assign names to the combined data frames
+names(combinedbg_list) <- c("TC1_C1_bg", "TC2_C1_bg", "TC3_C1_bg", "TC4_C1_bg", 
+"TC1_C2_bg", "TC2_C2_bg", "TC3_C2_bg", "TC4_C2_bg",
+"TC1_C3_bg", "TC2_C3_bg", "TC3_C3_bg")
+
+# Assign the results back to their respective variables in the global environment
+list2env(combinedbg_list, envir = .GlobalEnv)
+
+
+```
+
+```{r}
+#We assume bacterial respiration increases linearly over time so,
+#A linear model based on pre- and post- background MO2 measurements over time is used to subtract background respiration during experiments (Roche et al., 2013). 
+
+
+#make a list of combined background dfs
+background_list <- list(TC1_C1_bg, TC2_C1_bg, TC3_C1_bg, TC4_C1_bg, 
+   TC1_C2_bg, TC2_C2_bg, TC3_C2_bg, TC4_C2_bg,
+   TC1_C3_bg, TC2_C3_bg, TC3_C3_bg)
+
+# Apply the lm function to each data frame
+bg_regressions <- lapply(background_list, function(df) lm(MO2 ~ Clock.TIME, data = df))
+
+#regression1_t1 <- lm(MO2 ~ Clock.TIME, data = cs1_t1_bg) ^this is what is happening to each individual df
+#Performs a linear regression on MO2 over Time for each bg dataset
+
+
+
+# Naming the elements of the background list
+names(bg_regressions) <- c(
+  "regression_TC1_C1", "regression_TC2_C1", "regression_TC3_C1", "regression_TC4_C1",
+  "regression_TC1_C2", "regression_TC2_C2", "regression_TC3_C2", "regression_TC4_C2",
+  "regression_TC1_C3", "regression_TC2_C3", "regression_TC3_C3") 
+
+# Assign the results back to their respective variables in the global environment
+list2env(bg_regressions, envir = .GlobalEnv)
+```
+
+```{r}
+#Now weʻre going manual mode because the lists kept bugging out for me 
+
+
+#Predict background MO2 
+#C1
+TC1_C1_bg_estimates = predict(regression_TC1_C1, TC1_C1)
+TC2_C1_bg_estimates = predict(regression_TC2_C1, TC2_C1)
+TC3_C1_bg_estimates = predict(regression_TC3_C1, TC3_C1)
+TC4_C1_bg_estimates = predict(regression_TC4_C1, TC4_C1)
+
+#C2
+TC1_C2_bg_estimates = predict(regression_TC1_C2, TC1_C2)
+TC2_C2_bg_estimates = predict(regression_TC2_C2, TC2_C2)
+TC3_C2_bg_estimates = predict(regression_TC3_C2, TC3_C2)
+TC4_C2_bg_estimates = predict(regression_TC4_C2, TC4_C2)
+
+#C3 (pilot)
+TC1_C3_bg_estimates = predict(regression_TC1_C3, TC1_C3)
+TC2_C3_bg_estimates = predict(regression_TC2_C3, TC2_C3)
+TC3_C3_bg_estimates = predict(regression_TC3_C3, TC3_C3)
+
+
+
+#This line uses the predict() function to make predictions based on the linear model (regression1_t1) and a new dataset, cs1_t1.
+#cs1_t1_bg_estimates will contain the predicted values of MO2 in cs1_t1 based on the relationship found in r1_t1_bg.
+```
+
+
+```{r}
+#subtract background from SMR
+
+#C2
+TC1_C1$MO2 <- TC1_C1$MO2 - TC1_C1_bg_estimates
+TC2_C1$MO2 <- TC2_C1$MO2 - TC2_C1_bg_estimates
+TC3_C1$MO2 <- TC3_C1$MO2 - TC3_C1_bg_estimates
+TC4_C1$MO2 <- TC4_C1$MO2 - TC4_C1_bg_estimates
+
+#C2
+TC1_C2$MO2 <- TC1_C2$MO2 - TC1_C2_bg_estimates
+TC2_C2$MO2 <- TC2_C2$MO2 - TC2_C2_bg_estimates
+TC3_C2$MO2 <- TC3_C2$MO2 - TC3_C2_bg_estimates
+TC4_C2$MO2 <- TC4_C2$MO2 - TC4_C2_bg_estimates
+
+#C3
+TC1_C3$MO2 <- TC1_C3$MO2 - TC1_C3_bg_estimates
+TC2_C3$MO2 <- TC2_C3$MO2 - TC2_C3_bg_estimates
+TC3_C3$MO2 <- TC3_C3$MO2 - TC3_C3_bg_estimates
+```
+
+```{r}
+#predict background MO2 on pcrit dfs
+
+#C1
+pcrit_TC1_C1_bg_estimates = predict(regression_TC1_C1, pcrit_TC1_C1)
+pcrit_TC2_C1_bg_estimates = predict(regression_TC2_C1, pcrit_TC2_C1)
+pcrit_TC3_C1_bg_estimates = predict(regression_TC3_C1, pcrit_TC3_C1)
+pcrit_TC4_C1_bg_estimates = predict(regression_TC4_C1, pcrit_TC4_C1)
+
+#C2
+pcrit_TC1_C2_bg_estimates = predict(regression_TC1_C2, pcrit_TC1_C2)
+pcrit_TC2_C2_bg_estimates = predict(regression_TC2_C2, pcrit_TC2_C2)
+pcrit_TC3_C2_bg_estimates = predict(regression_TC3_C2, pcrit_TC3_C2)
+pcrit_TC4_C2_bg_estimates = predict(regression_TC4_C2, pcrit_TC4_C2)
+
+#C3 (pilot)
+pcrit_TC1_C3_bg_estimates = predict(regression_TC1_C3, pcrit_TC1_C3)
+pcrit_TC2_C3_bg_estimates = predict(regression_TC2_C3, pcrit_TC2_C3)
+pcrit_TC3_C3_bg_estimates = predict(regression_TC3_C3, pcrit_TC3_C3)
+
+
+```
+
+
+```{r}
+#subtract background from PCRIT
+
+#C1
+pcrit_TC1_C1$MO2 <- pcrit_TC1_C1$MO2 - pcrit_TC1_C1_bg_estimates
+pcrit_TC2_C1$MO2 <- pcrit_TC2_C1$MO2 - pcrit_TC2_C1_bg_estimates
+pcrit_TC3_C1$MO2 <- pcrit_TC3_C1$MO2 - pcrit_TC3_C1_bg_estimates
+pcrit_TC4_C1$MO2 <- pcrit_TC4_C1$MO2 - pcrit_TC4_C1_bg_estimates
+
+#C2
+pcrit_TC1_C2$MO2 <- pcrit_TC1_C2$MO2 - pcrit_TC1_C2_bg_estimates
+pcrit_TC2_C2$MO2 <- pcrit_TC2_C2$MO2 - pcrit_TC2_C2_bg_estimates
+pcrit_TC3_C2$MO2 <- pcrit_TC3_C2$MO2 - pcrit_TC3_C2_bg_estimates
+pcrit_TC4_C2$MO2 <- pcrit_TC4_C2$MO2 - pcrit_TC4_C2_bg_estimates
+
+#C3
+pcrit_TC1_C3$MO2 <- pcrit_TC1_C3$MO2 - pcrit_TC1_C3_bg_estimates
+pcrit_TC2_C3$MO2 <- pcrit_TC2_C3$MO2 - pcrit_TC2_C3_bg_estimates
+pcrit_TC3_C3$MO2 <- pcrit_TC3_C3$MO2 - pcrit_TC3_C3_bg_estimates
+```
+
+
+```{r}
+#apply calcSMR function to dfs
+
+
+#Control 1 test SMR
+TC1_C1_calcSMR <- calcSMR(TC1_C1$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC2_C1_calcSMR <- calcSMR(TC2_C1$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC3_C1_calcSMR <- calcSMR(TC3_C1$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC4_C1_calcSMR <- calcSMR(TC4_C1$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+
+#Control 2 test SMR
+TC1_C2_calcSMR <- calcSMR(TC1_C2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC2_C2_calcSMR <- calcSMR(TC2_C2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC3_C2_calcSMR <- calcSMR(TC3_C2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC4_C2_calcSMR <- calcSMR(TC4_C2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+
+#Control 3 (pilot) test SMR
+TC1_C3_calcSMR <- calcSMR(TC1_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC2_C3_calcSMR <- calcSMR(TC2_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC3_C3_calcSMR <- calcSMR(TC3_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+
+```
+
+
+```{r}
+#Now weʻre going to plot our corrected SMR data to see which distribution fits best 
+
+#define custom line colors for distribution visualization on graphs
+
+line_colors <- c("Double Normal" = "#2e2b28", "Q10" = "#800080", "Q15" = "#40AD5a",  "Q20" = "#009fff", "Q25" = "#ffb55a")
+
+# Function to create line data
+create_line_data <- function(calcSMR_data) {
+  yintercept_values <- c(calcSMR_data[[1]][1], calcSMR_data[[2]][1:4])
+  labels <- c("Double Normal", "Q10", "Q15", "Q20", "Q25")
+  
+  data.frame(
+    yintercept = yintercept_values,
+    line_label = factor(labels)
+  )
+}
+
+#Apply line colors function to individual fish data frames
+
+# List of SMR data
+#calcSMR_datasets <- list(
+ # cs1_t1_calcSMR, cs2_t1_calcSMR, cs3_t1_calcSMR, cs4_t1_calcSMR)
+
+calcSMR_datasets <- list(
+  TC1_C1_calcSMR, TC2_C1_calcSMR, TC3_C1_calcSMR, TC4_C1_calcSMR,
+  TC1_C2_calcSMR, TC2_C2_calcSMR, TC3_C2_calcSMR, TC4_C2_calcSMR,
+  TC1_C3_calcSMR, TC2_C3_calcSMR, TC3_C3_calcSMR)
+
+
+# Assign names to the SMR data
+#names(calcSMR_datasets) <- c(
+#  "line_data_cs1_t1", "line_data_cs2_t1", "line_data_cs3_t1", "line_data_cs4_t1")
+
+names(calcSMR_datasets) <- c(
+  "line_data_TC1_C1", "line_data_TC2_C1", "line_data_TC3_C1", "line_data_TC4_C1",
+  "line_data_TC1_C2", "line_data_TC2_C2", "line_data_TC3_C2", "line_data_TC4_C2",
+  "line_data_TC1_C3", "line_data_TC2_C3", "line_data_TC3_C3")
+# Apply the create_line_data function to each dataset
+line_data_results <- lapply(calcSMR_datasets, create_line_data)
+
+# Assign names to the results
+names(line_data_results) <- names(calcSMR_datasets)
+
+# Assign the results back to their respective variables in the global environment
+list2env(line_data_results, .GlobalEnv)
+
+
+```
+
+
+```{r}
+#Create a list of SMR dfs to streamline creating pdf of smr graphs
+#smr_dataframes <- list(cs1_t1, cs2_t1, cs3_t1, cs4_t1)
+#names(smr_dataframes) <- c("cs1_t1", "cs2_t1", "cs3_t1", "cs4_t1")
+
+
+smr_dataframes <- list(TC1_C1, TC2_C1, TC3_C1, TC4_C1, 
+                       TC1_C2, TC2_C2, TC3_C2, TC4_C2,
+                       TC1_C3, TC2_C3, TC3_C3)
+
+names(smr_dataframes) <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
+                           "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
+                           "TC1_C3", "TC2_C3", "TC3_C3")
+```
+
+
+```{r}
+#Here is the code to print all the graphs onto one pdf saved in your figs folder
+
+# Set directory for saving the PDF
+figs_dir <- "/Users/jasminereighard/Desktop/mbio621/figs" #change file path
+
+# Function to plot SMR data with adaptive y-axis
+plot_smr_data <- function(fish_id, smr_data_list, line_data_list) {
+  data <- smr_data_list[[fish_id]]
+  line_data <- line_data_list[[paste0("line_data_", fish_id)]]
+  
+  # Calculate the lower and upper limits for the y-axis
+  y_min <- min(data$MO2) - 10
+  y_max <- max(data$MO2) + 10
+  
+  
+  ggplot(data = data, aes(x = Clock.TIME, y = MO2)) +
+    geom_point() +
+    geom_hline(data = line_data, aes(yintercept = yintercept, color = line_label), linetype = "dashed") +
+    scale_color_manual(values = line_colors) +
+    theme_bw() +
+    labs(
+      title = paste("SMR", fish_id),
+      color = "Legend"
+    ) +
+    scale_y_continuous(
+      limits = c(y_min, y_max),  # Set y-axis limits
+      breaks = seq(y_min, y_max, by = 10),  # Set y-axis breaks
+      labels = scales::number_format(accuracy = 1)  # Round y-axis labels to whole numbers
+    ) +
+    scale_x_datetime(date_labels = "%H:%M", date_breaks = "2 hour") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    xlab("Time (s)") +
+    ylab("MO2 (mg O2/kg*h)") +
+    theme(
+      legend.position = c(.95, .95),
+      legend.justification = c("right", "top"),
+      legend.box.just = "right",
+      legend.margin = margin(4, 4, 4, 4)
+    )
+}
+
+# Generate a PDF with all SMR plots
+pdf(file = file.path(figs_dir, "SMR_plots.pdf"))
+for (fish_id in names(smr_dataframes)) {
+  try(print(plot_smr_data(fish_id, smr_dataframes, line_data_results)))
+}
+dev.off()
+```
+
+
+```{r}
+
+#I like to see plots in the console as well, go to the gear symbol next to Knit
+#Choose chunk output in console
+
+
+# Loop through each fish_id and display each plot in the console
+for (fish_id in names(smr_dataframes)) {
+  plot <- plot_smr_data(fish_id, smr_dataframes, line_data_results)
+  
+  # Display plot in the console
+  print(plot)
+}
+```
+
+```{r}
+# Function to calculate the mean distances of all corr_MO2 values +2 above double normal & -2 below q20
+calculate_distances <- function(data, calcSMR_data) {
+  filtered_data <- data %>%
+    filter(MO2 <= calcSMR_data[[1]][1] + 2 & MO2 >= calcSMR_data[[2]][1] - 2)
+
+  filtered_data %>%
+    mutate(
+      dist_Double_Normal = abs(MO2 - calcSMR_data[[1]][1]),
+      dist_q20 = abs(MO2 - calcSMR_data[[2]][1]),
+      dist_Q15 = abs(MO2 - calcSMR_data[[2]][2]),
+      dist_Q20 = abs(MO2 - calcSMR_data[[2]][3]),
+      dist_Q25 = abs(MO2 - calcSMR_data[[2]][4])
+    ) %>%
+    summarise(
+      mean_dist_Double_Normal = mean(dist_Double_Normal, na.rm = TRUE),
+      mean_dist_q20 = mean(dist_q20, na.rm = TRUE),
+      mean_dist_Q15 = mean(dist_Q15, na.rm = TRUE),
+      mean_dist_Q20 = mean(dist_Q20, na.rm = TRUE),
+      mean_dist_Q25 = mean(dist_Q25, na.rm = TRUE)
+    )
+}
+
+# Apply the function to each dataset using mapply
+distance_summaries <- mapply(
+  calculate_distances,
+  smr_dataframes,
+  calcSMR_datasets,
+  SIMPLIFY = FALSE
+)
+
+# Combine results into a data frame
+distance_summaries_df <- do.call(rbind, lapply(seq_along(distance_summaries), function(i) {
+  cbind(Fish = names(smr_dataframes)[i], distance_summaries[[i]])
+}))
+
+# Print the resulting data frame
+print(distance_summaries_df)
+
+```
+
+
+
+```{r}
+#Now weʻre going to extract our values for data analyses! 
+
+
+#Calculate Q20 and extract SMR values 
+extract_q20 <- function(calcSMR_data) {
+  return(as.numeric(calcSMR_data$quant["20%"]))  # Explicitly get the 20% quantile as a numeric value
+}
+
+# Function to apply extract_q20 to all elements in a list with modified names
+apply_extract_q20 <- function(smr_results_list) {
+  q20_values <- list()
+  for (name in names(smr_results_list)) {
+    # Extract q20 value as a numeric
+    q20 <- extract_q20(smr_results_list[[name]])
+    # Modify name by removing "line_data_" prefix
+    modified_name <- sub("^line_data_", "", name)
+    # Store q20 value with modified name
+    q20_values[[modified_name]] <- q20
+  }
+  return(q20_values)
+}
+
+# Extract q20 values for all smr results
+control_q20 <- apply_extract_q20(calcSMR_datasets)
+
+#Example code for when adding other treatment groups 
+#treatment_q20 <- calculate_MMR(calcSMR_trt_datasets)
+#all_q20_values <- c(control_q20, treatment_q20) #combine MMR ctrl and trt
+```
+
+
+```{r}
+
+smr_dataframes <- list(TC1_C1, TC2_C1, TC3_C1, TC4_C1, 
+                       TC1_C2, TC2_C2, TC3_C2, TC4_C2,
+                       TC1_C3, TC2_C3, TC3_C3)
+
+names(smr_dataframes) <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
+                           "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
+                           "TC1_C3", "TC2_C3", "TC3_C3")
+
+calculate_MMR <- function(smr_data_list) {
+  MMR_values <- list()
+  for (name in names(smr_data_list)) {
+    df <- smr_data_list[[name]]
+    MMR <- max(df$MO2, na.rm = TRUE)
+    MMR_values[[name]] <- MMR
+  }
+  return(MMR_values)
+}
+
+# Calculate MMR values
+control_MMR <- calculate_MMR(smr_dataframes)
+
+# Print the list to verify
+print(control_MMR)
+
+```
+
+
+```{r}
+# Define Function to Calculate Aerobic Scope
+calc_aerobic_scope <- function(MMR, SMR) {
+  return(MMR - SMR)
+}
+
+# Calculate aerobic scope for each dataset
+aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE)  
+# Simplify = FALSES stores as a list
+#When adding other treatments, change "control_MMR" and "control_q20" to combined values
+```
+
+
+
+
+```{r}
+
+#pcrit function
+findPcrit <- function(model, SMR) {
+  m <- model$coefficient[2] #slope
+  b <- model$coefficient[1] # Intercept
+  e <- model$sigma #residual error
+  pO2 = (SMR - b - e)/m
+  return(paste("Pcrit = ", pO2))
+}
+
+
+#run linear regression of MO2 ~ po2 when crabs are oxyconforming
+#Index MO2 data for final 4 MO2 measurement
+
+pcrit_lm1 <- lm(MO2 ~ avg.po2, data = pcrit_MO2_1[28:32, ])
+pcrit_lm1
+
+
+#residual standard error is the e in our pcrit
+#line should intersect with 0 
+#these crabs may have some other regulatory mechanisms (C1 R1)
+
+pcrit_model1 <- summary(pcrit_lm1)
+
+#use pcrit function to find that shit
+
+findPcrit(pcrit_model1, SMR = 200)
+
+```
+
+
+```{r}
+# Set directory for saving the PDF
+figs_dir <- "/Users/jasminereighard/Desktop/mbio621/figs"  # Change file path if needed
+
+# Function to plot pcrit data with two subplots
+plot_pcrit_data <- function(fish_id, pcrit_data_list) {
+  data <- pcrit_data_list[[fish_id]]
+  
+  # First plot: MO2 vs Clock.TIME
+  plot1 <- ggplot(data, aes(x = Clock.TIME, y = MO2)) +
+    geom_point() +
+    theme_bw() +
+    labs(
+      title = paste("MO2 vs Clock.TIME -", fish_id),
+      x = "Clock.TIME",
+      y = "MO2"
+    )
+  
+  # Second plot: MO2 vs avg.po2
+  plot2 <- ggplot(data, aes(x = avg.po2, y = MO2)) +
+    geom_point() +
+    theme_bw() +
+    labs(
+      title = paste("MO2 vs avg.po2 -", fish_id),
+      x = "avg.po2",
+      y = "MO2"
+    )
+  
+  # Combine the two plots into a grid
+  combined_plot <- cowplot::plot_grid(plot1, plot2, ncol = 2, labels = c("A", "B"))
+  
+  return(combined_plot)
+}
+
+# Generate a PDF with all pcrit plots
+pdf(file = file.path(figs_dir, "pcrit_quick_viz.pdf"), width = 14, height = 7)
+for (fish_id in names(pcrit_data)) {
+  try(print(plot_pcrit_data(fish_id, pcrit_data)))
+}
+dev.off()
+
+```
+
+
+```{r}
+
+# Loop through each fish_id in pcrit_data and display each plot in the console
+for (fish_id in names(pcrit_data)) {
+  plot <- plot_pcrit_data(fish_id, pcrit_data)
+  
+  # Display plot in the console
+  print(plot)
+}
+
+```
+
+
+```{r}
+
+# Initialize an empty list to store the results
+pcrit_results <- list()
+
+# Loop through each dataframe in the list
+for (fish_id in names(pcrit_data)) {
+  # Remove the "pcrit_" prefix to match with control_q20 names
+  control_fish_id <- sub("pcrit_", "", fish_id)
+  
+  # Get the dataframe from pcrit_data
+  df <- pcrit_data[[fish_id]]
+  
+  if (nrow(df) >= 6) {
+    # Get the last 6 rows
+    last_6_df <- tail(df, 6)
+    
+    # Run the linear model
+    pcrit_lm <- lm(MO2 ~ avg.po2, data = last_6_df)
+    pcrit_model <- summary(pcrit_lm)
+    
+    # Retrieve the SMR value from the control_q20 list
+    SMR <- control_q20[[control_fish_id]]
+    
+    if (!is.null(SMR)) {  # Check if SMR exists for this fish_id
+      Pcrit <- findPcrit(pcrit_model, SMR)
+      
+      # Save the results
+      pcrit_results[[fish_id]] <- list(
+        Pcrit = Pcrit,
+        ModelSummary = pcrit_model
+      )
+    }
+  }
+}
+
+# Print the results
+print(pcrit_results)
+
+
+```
+
+
+
+```{r}
+# Initialize an empty data frame to store the summary
+pcrit_summary_df <- data.frame(
+  fish_id = character(),
+  Pcrit = numeric(),
+  Intercept = numeric(),
+  avg_po2 = numeric(),
+  Adjusted_R2 = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+# Loop through the pcrit_results to extract relevant information
+for (fish_id in names(pcrit_results)) {
+  result <- pcrit_results[[fish_id]]
+  
+  # Ensure the result is valid and contains ModelSummary
+  if (!is.null(result$ModelSummary)) {
+    Pcrit <- as.numeric(result$Pcrit) # Extract Pcrit
+    model_summary <- result$ModelSummary
+    
+    # Check if model_summary is a valid summary.lm object
+    if ("coefficients" %in% names(model_summary)) {
+      # Extract coefficients and statistical metrics
+      intercept <- model_summary$coefficients["(Intercept)", "Estimate"]
+      avg_po2_slope <- model_summary$coefficients["avg.po2", "Estimate"]
+      adjusted_r2 <- model_summary$adj.r.squared
+      p_value <- model_summary$coefficients["avg.po2", "Pr(>|t|)"]
+      
+      # Add the row to the summary dataframe
+      pcrit_summary_df <- rbind(
+        pcrit_summary_df,
+        data.frame(
+          fish_id = fish_id,
+          Pcrit = Pcrit,
+          Intercept = intercept,
+          avg_po2 = avg_po2_slope,
+          Adjusted_R2 = adjusted_r2,
+          p_value = p_value,
+          stringsAsFactors = FALSE
+        )
+      )
+    }
+  }
+}
+
+# Display the resulting summary dataframe
+print(pcrit_summary_df)
+
+```
+
+
+```{r}
+pcrit_MO2_1 <- read.table(file = "/Users/jasminereighard/Desktop/mbio621/raw_data/C2_rawdata/Experiment_PCRIT_TC__C2 22 November 2024 01 06PM/Summary data resp 1.txt", 
+                        skip = 15,
+                        header = TRUE,
+                        fill = TRUE,
+                        sep = ";")
+
+pcrit_MO2_1$Clock.TIME <- as.POSIXct(pcrit_MO2_1$Clock.TIME)
+
+#quick visualization of MO2 vs time / po2
+plot(pcrit_MO2_1$MO2 ~ pcrit_MO2_1$Clock.TIME)
+plot(pcrit_MO2_1$MO2 ~ pcrit_MO2_1$avg.po2)
+
+
+
+#run linear regression of MO2 ~ po2 when crabs are oxyconforming
+#Index MO2 data for final 4 MO2 measurement
+
+pcrit_lm1 <- lm(MO2 ~ avg.po2, data = pcrit_MO2_1[28:32, ])
+pcrit_lm1
+
+
+#residual standard error is the e in our pcrit
+#line should intersect with 0 
+#these crabs may have some other regulatory mechanisms (C1 R1)
+
+pcrit_model1 <- summary(pcrit_lm1)
+
+#use pcrit function to find that shit
+
+findPcrit(pcrit_model1, SMR = 200)
+
+```
+
+
+
+```{r}
+# Define temperature, mass, and group vectors
+temperature <- c(26, 26, 26, 26)
+mass <- c(31.95, 25.61, 33.6, 25.46)
+group <- c(rep("Control", 4))
+
+# Create the wide format dataframe
+# Each observation is represented in a single row
+widerespdat <- data.frame(
+  id = names(control_q20),
+  temperature = temperature,
+  mass = mass,
+  group = group,
+  MMR = unlist(control_MMR),
+  SMR = unlist(control_q20),
+  AS = unlist(aerobic_scope_values)
+)
+
+
+#change to long format
+#each unique measurement or observation is represented as a separate row, and additional columns are used to indicate the variable or condition (i.e., metric = SMR, MMR, AS).
+longrespdat <- pivot_longer(widerespdat, cols = c(SMR, MMR, AS), names_to = "metric", values_to = "value")
+#Check variables are stored as correct data type 
+str(longrespdat)
+
+#Correct variables
+longrespdat$metric <- as.factor(longrespdat$metric)
+longrespdat$group <- as.factor(longrespdat$group)
+longrespdat$id <- as.factor(longrespdat$id)
+
+head(longrespdat)
+
+```
+
+
+```{r}
+#pcrit function
+findPcrit <- function(model, SMR) {
+  m <- model$coefficient[2] #slope
+  b <- model$coefficient[1] # Intercept
+  e <- model$sigma #residual error
+  pO2 = (SMR - b - e)/m
+  return(paste("Pcrit = ", pO2))
+}
+
+
+```
+
+
+
+```{r}
+pcrit_MO2_1 <- read.table(file = "/Users/jasminereighard/Desktop/mbio621/raw_data/C2_rawdata/Experiment_PCRIT_TC__C2 22 November 2024 01 06PM/Summary data resp 1.txt", 
+                        skip = 15,
+                        header = TRUE,
+                        fill = TRUE,
+                        sep = ";")
+
+pcrit_MO2_1$Clock.TIME <- as.POSIXct(pcrit_MO2_1$Clock.TIME)
+
+#quick visualization of MO2 vs time / po2
+pcrit_MO2_1 <- pcrit_MO2_1[1:32, ]
+plot(pcrit_MO2_1$MO2 ~ pcrit_MO2_1$Clock.TIME)
+plot(pcrit_MO2_1$MO2 ~ pcrit_MO2_1$avg.po2)
+
+
+
+#run linear regression of MO2 ~ po2 when crabs are oxyconforming
+#Index MO2 data for final 4 MO2 measurement
+
+pcrit_lm1 <- lm(MO2 ~ avg.po2, data = pcrit_MO2_1[28:32, ])
+pcrit_lm1
+
+
+#residual standard error is the e in our pcrit
+#line should intersect with 0 
+#these crabs may have some other regulatory mechanisms (C1 R1)
+
+pcrit_model1 <- summary(pcrit_lm1)
+
+#use pcrit function to find that shit
+
+findPcrit(pcrit_model1, SMR = 200)
+
+```
+
+
+
+
