@@ -1250,6 +1250,43 @@ apply_extract_q20 <- function(smr_results_list) {
 # Extract q20 values for all smr results
 control_q20 <- apply_extract_q20(calcSMR_datasets)
 
+print(control_q20)
+```
+
+    ## $TC1_C1
+    ## [1] 47.53115
+    ## 
+    ## $TC2_C1
+    ## [1] 58.74308
+    ## 
+    ## $TC3_C1
+    ## [1] 86.24647
+    ## 
+    ## $TC4_C1
+    ## [1] 47.64096
+    ## 
+    ## $TC1_C2
+    ## [1] 163.9792
+    ## 
+    ## $TC2_C2
+    ## [1] 60.41863
+    ## 
+    ## $TC3_C2
+    ## [1] 68.40989
+    ## 
+    ## $TC4_C2
+    ## [1] 96.58874
+    ## 
+    ## $TC1_C3
+    ## [1] 81.33346
+    ## 
+    ## $TC2_C3
+    ## [1] 185.6171
+    ## 
+    ## $TC3_C3
+    ## [1] 43.68284
+
+``` r
 #Example code for when adding other treatment groups 
 #treatment_q20 <- calculate_MMR(calcSMR_trt_datasets)
 #all_q20_values <- c(control_q20, treatment_q20) #combine MMR ctrl and trt
@@ -1321,7 +1358,45 @@ calc_aerobic_scope <- function(MMR, SMR) {
 }
 
 # Calculate aerobic scope for each dataset
-aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE)  
+aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE) 
+
+print(aerobic_scope_values)
+```
+
+    ## $TC1_C1
+    ## [1] 269.1741
+    ## 
+    ## $TC2_C1
+    ## [1] 289.8721
+    ## 
+    ## $TC3_C1
+    ## [1] 246.7371
+    ## 
+    ## $TC4_C1
+    ## [1] 379.4818
+    ## 
+    ## $TC1_C2
+    ## [1] 276.7546
+    ## 
+    ## $TC2_C2
+    ## [1] 715.4064
+    ## 
+    ## $TC3_C2
+    ## [1] 342.3356
+    ## 
+    ## $TC4_C2
+    ## [1] 309.837
+    ## 
+    ## $TC1_C3
+    ## [1] 443.3812
+    ## 
+    ## $TC2_C3
+    ## [1] 129.0244
+    ## 
+    ## $TC3_C3
+    ## [1] 466.2292
+
+``` r
 # Simplify = FALSES stores as a list
 #When adding other treatments, change "control_MMR" and "control_q20" to combined values
 ```

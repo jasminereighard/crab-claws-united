@@ -896,6 +896,8 @@ apply_extract_q20 <- function(smr_results_list) {
 # Extract q20 values for all smr results
 control_q20 <- apply_extract_q20(calcSMR_datasets)
 
+print(control_q20)
+
 #Example code for when adding other treatment groups 
 #treatment_q20 <- calculate_MMR(calcSMR_trt_datasets)
 #all_q20_values <- c(control_q20, treatment_q20) #combine MMR ctrl and trt
@@ -938,7 +940,9 @@ calc_aerobic_scope <- function(MMR, SMR) {
 }
 
 # Calculate aerobic scope for each dataset
-aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE)  
+aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE) 
+
+print(aerobic_scope_values)
 # Simplify = FALSES stores as a list
 #When adding other treatments, change "control_MMR" and "control_q20" to combined values
 ```
