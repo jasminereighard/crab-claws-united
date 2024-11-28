@@ -291,7 +291,7 @@ for (name in pcrit_names) {
   df <- pcrit_data[[name]]
   
   # Filter rows where avg.po2 >= 30
-  subset_df <- df %>% filter(avg.po2 >= 60)
+  subset_df <- df %>% filter(avg.po2 >= 5)
   
   # Check if any rows remain after filtering
   if (nrow(subset_df) == 0) {
@@ -310,6 +310,9 @@ print(names(pcrit_subsets))  # List the names of the new subset dataframes
 list2env(pcrit_subsets, envir = .GlobalEnv)
 ```
 
+```{r}
+head(po50_pcrit_TC1_C1)
+```
 
 
 ```{r}
@@ -322,32 +325,37 @@ SMR_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
                "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
                "TC1_C3", "TC2_C3", "TC3_C3")
 
-po50_pcrit_names <- c("po50_pcrit_TC1_C1", "po50_pcrit_TC2_C1", "po50_pcrit_TC3_C1", "po50_pcrit_TC4_C1",
-               "po50_pcrit_TC1_C2", "po50_pcrit_TC2_C2", "po50_pcrit_TC3_C2", "po50_pcrit_TC4_C2",
-               "po50_pcrit_TC1_C3", "po50_pcrit_TC2_C3", "po50_pcrit_TC3_C3")
+pcrit_names <- c("pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
+                 "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
+                 "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3")
 
 # Loop through both lists to perform a left join
 for (i in seq_along(MMR_names)) {
   # Get the MMR and SMR dataframes
   MMR_df <- get(MMR_names[i])
   SMR_df <- get(SMR_names[i])
-  po50_PCRIT_df <- get(po50_pcrit_names[i])
+  pcrit_df <- get(pcrit_names[i])
+  
+  # Subtract 10 hours from the Clock.TIME in the pcrit dataframe
+  if ("Clock.TIME" %in% colnames(pcrit_df)) {
+    pcrit_df$Clock.TIME <- pcrit_df$Clock.TIME - lubridate::hours(10)
+  }
   
   # Add a column to prioritize the order
   MMR_df <- MMR_df %>% mutate(priority = 1)
   SMR_df <- SMR_df %>% mutate(priority = 2)
-  po50_PCRIT_df <- po50_PCRIT_df %>% mutate(priority = 3)
+  pcrit_df <- pcrit_df %>% mutate(priority = 3)
   
   # Combine the dataframes with left join
-  combined_df <- bind_rows(MMR_df, SMR_df, po50_PCRIT_df) %>%
+  combined_df <- bind_rows(MMR_df, SMR_df, pcrit_df) %>%
     arrange(priority) %>%  # Ensure MMR comes first
     select(-priority)      # Remove the priority column
   
   # Assign the combined dataframe to the SMR name
   assign(SMR_names[i], combined_df)
 }
-```
 
+```
 
 ```{r}
 

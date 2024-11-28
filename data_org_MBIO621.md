@@ -477,7 +477,7 @@ for (name in pcrit_names) {
   df <- pcrit_data[[name]]
   
   # Filter rows where avg.po2 >= 30
-  subset_df <- df %>% filter(avg.po2 >= 60)
+  subset_df <- df %>% filter(avg.po2 >= 5)
   
   # Check if any rows remain after filtering
   if (nrow(subset_df) == 0) {
@@ -506,6 +506,46 @@ list2env(pcrit_subsets, envir = .GlobalEnv)
     ## <environment: R_GlobalEnv>
 
 ``` r
+head(po50_pcrit_TC1_C1)
+```
+
+    ##            Clock.TIME TIME.HOURS  TIME.UNIX       MO2       SLOPE Intercept
+    ## 1 2024-11-20 09:58:13 0.01722222 1732132753 198.19331 -0.06066321  93.86238
+    ## 2 2024-11-20 09:59:15 0.03472222 1732132815 163.75782 -0.05012316  90.34090
+    ## 3 2024-11-20 10:00:17 0.05166667 1732132877 166.92574 -0.05109280  86.95273
+    ## 4 2024-11-20 10:01:20 0.06916667 1732132939  73.52465 -0.02250450  83.92497
+    ## 5 2024-11-20 10:02:22 0.08638889 1732133001 164.89086 -0.05046996  82.96280
+    ## 6 2024-11-20 10:03:24 0.10361111 1732133063 176.25929 -0.05394962  79.52485
+    ##    Pearson.R       R.2            P      Std.Err Measurement.duration.seconds
+    ## 1 -0.9971558 0.9943198 7.874095e-67 0.0006020492                           60
+    ## 2 -0.9954924 0.9910051 4.565753e-62 0.0006216895                           61
+    ## 3 -0.9938343 0.9877066 4.182991e-57 0.0007484600                           60
+    ## 4 -0.9919787 0.9840217 8.396721e-54 0.0003765461                           60
+    ## 5 -0.9824633 0.9652341 5.238797e-44 0.0012577070                           60
+    ## 6 -0.9919342 0.9839334 9.852722e-54 0.0009052191                           60
+    ##    avg.po2 median.po2 minimum.po2 max.po2 delta.po2 oxygen.solubility
+    ## 1 92.01215    91.9900      90.331  93.699     3.368          6.707583
+    ## 2 88.78708    88.8300      87.130  90.218     3.088          6.707583
+    ## 3 85.39440    85.2835      84.087  86.992     2.905          6.707583
+    ## 4 83.23858    83.2075      82.546  83.974     1.428          6.707583
+    ## 5 81.42347    81.6005      79.769  82.545     2.776          6.707583
+    ## 6 77.87938    77.7500      76.535  79.556     3.021          6.707583
+    ##   ratio.vreal.fish total.experiment.duration.hours  minutes seconds
+    ## 1         13.52991                      0.01722222 1.033333      62
+    ## 2         13.52991                      0.03472222 2.083333     125
+    ## 3         13.52991                      0.05166667 3.100000     186
+    ## 4         13.52991                      0.06916667 4.150000     249
+    ## 5         13.52991                      0.08638889 5.183333     311
+    ## 6         13.52991                      0.10361111 6.216667     373
+    ##           days  X fish_id
+    ## 1 0.0007175926 NA  TC1_C1
+    ## 2 0.0014467593 NA  TC1_C1
+    ## 3 0.0021527778 NA  TC1_C1
+    ## 4 0.0028819444 NA  TC1_C1
+    ## 5 0.0035995370 NA  TC1_C1
+    ## 6 0.0043171296 NA  TC1_C1
+
+``` r
 # List of MMR and SMR dataframe names
 MMR_names <- c("MMR_TC1_C1", "MMR_TC2_C1", "MMR_TC3_C1", "MMR_TC4_C1",
                "MMR_TC1_C2", "MMR_TC2_C2", "MMR_TC3_C2", "MMR_TC4_C2",
@@ -515,24 +555,29 @@ SMR_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
                "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
                "TC1_C3", "TC2_C3", "TC3_C3")
 
-po50_pcrit_names <- c("po50_pcrit_TC1_C1", "po50_pcrit_TC2_C1", "po50_pcrit_TC3_C1", "po50_pcrit_TC4_C1",
-               "po50_pcrit_TC1_C2", "po50_pcrit_TC2_C2", "po50_pcrit_TC3_C2", "po50_pcrit_TC4_C2",
-               "po50_pcrit_TC1_C3", "po50_pcrit_TC2_C3", "po50_pcrit_TC3_C3")
+pcrit_names <- c("pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
+                 "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
+                 "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3")
 
 # Loop through both lists to perform a left join
 for (i in seq_along(MMR_names)) {
   # Get the MMR and SMR dataframes
   MMR_df <- get(MMR_names[i])
   SMR_df <- get(SMR_names[i])
-  po50_PCRIT_df <- get(po50_pcrit_names[i])
+  pcrit_df <- get(pcrit_names[i])
+  
+  # Subtract 10 hours from the Clock.TIME in the pcrit dataframe
+  if ("Clock.TIME" %in% colnames(pcrit_df)) {
+    pcrit_df$Clock.TIME <- pcrit_df$Clock.TIME - lubridate::hours(10)
+  }
   
   # Add a column to prioritize the order
   MMR_df <- MMR_df %>% mutate(priority = 1)
   SMR_df <- SMR_df %>% mutate(priority = 2)
-  po50_PCRIT_df <- po50_PCRIT_df %>% mutate(priority = 3)
+  pcrit_df <- pcrit_df %>% mutate(priority = 3)
   
   # Combine the dataframes with left join
-  combined_df <- bind_rows(MMR_df, SMR_df, po50_PCRIT_df) %>%
+  combined_df <- bind_rows(MMR_df, SMR_df, pcrit_df) %>%
     arrange(priority) %>%  # Ensure MMR comes first
     select(-priority)      # Remove the priority column
   
@@ -1157,7 +1202,7 @@ for (fish_id in names(smr_dataframes)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-11.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-11.png)<!-- -->
 
 ``` r
 # Function to calculate the mean distances of all corr_MO2 values +2 above double normal & -2 below q20
@@ -1200,29 +1245,29 @@ print(distance_summaries_df)
 ```
 
     ##      Fish mean_dist_Double_Normal mean_dist_q20 mean_dist_Q15 mean_dist_Q20
-    ## 1  TC1_C1                5.159885      5.247325      3.705302      3.138112
-    ## 2  TC2_C1                6.823702      6.693545      5.593977      4.947758
-    ## 3  TC3_C1                8.886003     10.722710      8.719599      7.419704
-    ## 4  TC4_C1               11.743532      9.321742      7.997187      6.898344
-    ## 5  TC1_C2                6.884188      7.537890      5.010773      4.037305
-    ## 6  TC2_C2                8.462110      8.710895      7.315227      6.140893
-    ## 7  TC3_C2               11.432293     12.033472      7.245037      6.383469
-    ## 8  TC4_C2                5.784668      5.667677      4.416115      3.594688
-    ## 9  TC1_C3                7.937765      7.250761      4.885553      4.093238
-    ## 10 TC2_C3                9.971735     12.963568      8.144816      6.531512
-    ## 11 TC3_C3               11.293310     12.601892      7.666237      6.540112
+    ## 1  TC1_C1                5.224439      4.743684      3.514724      3.268867
+    ## 2  TC2_C1                7.337244      8.388356      5.755591      4.705470
+    ## 3  TC3_C1               10.429164     12.068265      8.354099      7.367226
+    ## 4  TC4_C1               11.625146     15.647054     11.911447      8.402781
+    ## 5  TC1_C2               10.153044     13.262098      7.437971      6.069993
+    ## 6  TC2_C2                6.878797      7.221212      6.170213      5.516257
+    ## 7  TC3_C2               11.214921     10.449278      7.510628      6.569753
+    ## 8  TC4_C2                7.145717     11.000440      5.033567      4.374629
+    ## 9  TC1_C3                9.327408     10.729945      7.084310      5.993268
+    ## 10 TC2_C3                9.882765     25.289514     13.973324      9.308088
+    ## 11 TC3_C3               14.556662      8.888940      7.676654      7.016168
     ##    mean_dist_Q25
-    ## 1       3.349638
-    ## 2       4.612652
-    ## 3       5.950926
-    ## 4       6.312327
-    ## 5       4.520011
-    ## 6       5.441774
-    ## 7       8.148361
-    ## 8       4.458441
-    ## 9       4.899480
-    ## 10      5.683829
-    ## 11      7.861603
+    ## 1       4.263212
+    ## 2       4.144506
+    ## 3       6.286615
+    ## 4       7.022583
+    ## 5       6.091115
+    ## 6       4.795748
+    ## 7       7.348705
+    ## 8       4.694882
+    ## 9       6.379394
+    ## 10      8.544888
+    ## 11      8.154985
 
 ``` r
 #Now weʻre going to extract our values for data analyses! 
@@ -1254,37 +1299,37 @@ print(control_q20)
 ```
 
     ## $TC1_C1
-    ## [1] 47.53115
+    ## [1] 48.83579
     ## 
     ## $TC2_C1
-    ## [1] 58.74308
+    ## [1] 56.39584
     ## 
     ## $TC3_C1
-    ## [1] 86.24647
+    ## [1] 85.86303
     ## 
     ## $TC4_C1
-    ## [1] 47.64096
+    ## [1] 41.60105
     ## 
     ## $TC1_C2
-    ## [1] 163.9792
+    ## [1] 161.1708
     ## 
     ## $TC2_C2
-    ## [1] 60.41863
+    ## [1] 58.01047
     ## 
     ## $TC3_C2
-    ## [1] 68.40989
+    ## [1] 58.9294
     ## 
     ## $TC4_C2
-    ## [1] 96.58874
+    ## [1] 93.82691
     ## 
     ## $TC1_C3
-    ## [1] 81.33346
+    ## [1] 73.7792
     ## 
     ## $TC2_C3
-    ## [1] 185.6171
+    ## [1] 178.4134
     ## 
     ## $TC3_C3
-    ## [1] 43.68284
+    ## [1] 22.66458
 
 ``` r
 #Example code for when adding other treatment groups 
@@ -1364,37 +1409,37 @@ print(aerobic_scope_values)
 ```
 
     ## $TC1_C1
-    ## [1] 269.1741
+    ## [1] 267.8695
     ## 
     ## $TC2_C1
-    ## [1] 289.8721
+    ## [1] 292.2193
     ## 
     ## $TC3_C1
-    ## [1] 246.7371
+    ## [1] 247.1206
     ## 
     ## $TC4_C1
-    ## [1] 379.4818
+    ## [1] 385.5217
     ## 
     ## $TC1_C2
-    ## [1] 276.7546
+    ## [1] 279.563
     ## 
     ## $TC2_C2
-    ## [1] 715.4064
+    ## [1] 717.8146
     ## 
     ## $TC3_C2
-    ## [1] 342.3356
+    ## [1] 351.8161
     ## 
     ## $TC4_C2
-    ## [1] 309.837
+    ## [1] 312.5988
     ## 
     ## $TC1_C3
-    ## [1] 443.3812
+    ## [1] 450.9355
     ## 
     ## $TC2_C3
-    ## [1] 129.0244
+    ## [1] 136.2281
     ## 
     ## $TC3_C3
-    ## [1] 466.2292
+    ## [1] 487.2475
 
 ``` r
 # Simplify = FALSES stores as a list
@@ -1456,7 +1501,7 @@ for (fish_id in names(pcrit_data)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-11.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-11.png)<!-- -->
 
 ``` r
 #pcrit function
@@ -1510,7 +1555,7 @@ print(pcrit_results)
 
     ## $pcrit_TC1_C1
     ## $pcrit_TC1_C1$Pcrit
-    ## [1] "Pcrit =  1.43485527934779"
+    ## [1] "Pcrit =  1.76658479895126"
     ## 
     ## $pcrit_TC1_C1$ModelSummary
     ## 
@@ -1536,7 +1581,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C1
     ## $pcrit_TC2_C1$Pcrit
-    ## [1] "Pcrit =  14.6834559413903"
+    ## [1] "Pcrit =  13.7605680308732"
     ## 
     ## $pcrit_TC2_C1$ModelSummary
     ## 
@@ -1562,7 +1607,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C1
     ## $pcrit_TC3_C1$Pcrit
-    ## [1] "Pcrit =  15.9465282241017"
+    ## [1] "Pcrit =  15.84357326284"
     ## 
     ## $pcrit_TC3_C1$ModelSummary
     ## 
@@ -1588,7 +1633,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC4_C1
     ## $pcrit_TC4_C1$Pcrit
-    ## [1] "Pcrit =  8.20119791229383"
+    ## [1] "Pcrit =  7.33608031164109"
     ## 
     ## $pcrit_TC4_C1$ModelSummary
     ## 
@@ -1614,7 +1659,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC1_C2
     ## $pcrit_TC1_C2$Pcrit
-    ## [1] "Pcrit =  22.4171692060477"
+    ## [1] "Pcrit =  22.1087124553632"
     ## 
     ## $pcrit_TC1_C2$ModelSummary
     ## 
@@ -1640,7 +1685,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C2
     ## $pcrit_TC2_C2$Pcrit
-    ## [1] "Pcrit =  8.13627380161237"
+    ## [1] "Pcrit =  7.76243877479586"
     ## 
     ## $pcrit_TC2_C2$ModelSummary
     ## 
@@ -1666,7 +1711,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C2
     ## $pcrit_TC3_C2$Pcrit
-    ## [1] "Pcrit =  15.4189228730107"
+    ## [1] "Pcrit =  13.7911702187696"
     ## 
     ## $pcrit_TC3_C2$ModelSummary
     ## 
@@ -1692,7 +1737,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC4_C2
     ## $pcrit_TC4_C2$Pcrit
-    ## [1] "Pcrit =  16.0677317408753"
+    ## [1] "Pcrit =  15.4021621656069"
     ## 
     ## $pcrit_TC4_C2$ModelSummary
     ## 
@@ -1718,7 +1763,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC1_C3
     ## $pcrit_TC1_C3$Pcrit
-    ## [1] "Pcrit =  11.894681912145"
+    ## [1] "Pcrit =  10.5858745950305"
     ## 
     ## $pcrit_TC1_C3$ModelSummary
     ## 
@@ -1744,7 +1789,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C3
     ## $pcrit_TC2_C3$Pcrit
-    ## [1] "Pcrit =  33.5877629326991"
+    ## [1] "Pcrit =  32.4487751234578"
     ## 
     ## $pcrit_TC2_C3$ModelSummary
     ## 
@@ -1770,7 +1815,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C3
     ## $pcrit_TC3_C3$Pcrit
-    ## [1] "Pcrit =  8.58924327908573"
+    ## [1] "Pcrit =  5.59727622126018"
     ## 
     ## $pcrit_TC3_C3$ModelSummary
     ## 
