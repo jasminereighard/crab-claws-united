@@ -4,6 +4,64 @@ Jasmine Reighard
 2024-11-03
 
 ``` r
+knitr::opts_chunk$set(echo = TRUE)
+
+
+#Step 1: Set working directory 
+#> Click "Session" tab at the very top of your screen
+#> Set working directory
+#> Choose directory...
+#> mbio621 folder
+#> Open
+
+#Load all necessary libraries
+#if you dont have any of them, go to packages tab, then click install
+
+## Libraries
+require(ggplot2)
+```
+
+    ## Loading required package: ggplot2
+
+``` r
+require(dplyr)
+```
+
+    ## Loading required package: dplyr
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+require(performance)
+```
+
+    ## Loading required package: performance
+
+``` r
+require(mclust) #SMR
+```
+
+    ## Loading required package: mclust
+
+    ## Package 'mclust' version 6.0.0
+    ## Type 'citation("mclust")' for citing this R package in publications.
+
+``` r
+require(tidyr)
+```
+
+    ## Loading required package: tidyr
+
+``` r
 #Loading calculate SMR function from (Chabot et al 2016)
 #y is column for mo2
 #single file for each fish, one summary file for publication
@@ -1658,90 +1716,3 @@ print(pcrit_results)
     ## Residual standard error: 0.91 on 4 degrees of freedom
     ## Multiple R-squared:  0.9861, Adjusted R-squared:  0.9826 
     ## F-statistic: 283.2 on 1 and 4 DF,  p-value: 7.307e-05
-
-``` r
-# Initialize an empty data frame to store the summary
-pcrit_summary_df <- data.frame(
-  fish_id = character(),
-  Pcrit = numeric(),
-  Intercept = numeric(),
-  avg_po2 = numeric(),
-  Adjusted_R2 = numeric(),
-  p_value = numeric(),
-  stringsAsFactors = FALSE
-)
-
-# Loop through the pcrit_results to extract relevant information
-for (fish_id in names(pcrit_results)) {
-  result <- pcrit_results[[fish_id]]
-  
-  # Ensure the result is valid and contains ModelSummary
-  if (!is.null(result$ModelSummary)) {
-    Pcrit <- as.numeric(result$Pcrit) # Extract Pcrit
-    model_summary <- result$ModelSummary
-    
-    # Check if model_summary is a valid summary.lm object
-    if ("coefficients" %in% names(model_summary)) {
-      # Extract coefficients and statistical metrics
-      intercept <- model_summary$coefficients["(Intercept)", "Estimate"]
-      avg_po2_slope <- model_summary$coefficients["avg.po2", "Estimate"]
-      adjusted_r2 <- model_summary$adj.r.squared
-      p_value <- model_summary$coefficients["avg.po2", "Pr(>|t|)"]
-      
-      # Add the row to the summary dataframe
-      pcrit_summary_df <- rbind(
-        pcrit_summary_df,
-        data.frame(
-          fish_id = fish_id,
-          Pcrit = Pcrit,
-          Intercept = intercept,
-          avg_po2 = avg_po2_slope,
-          Adjusted_R2 = adjusted_r2,
-          p_value = p_value,
-          stringsAsFactors = FALSE
-        )
-      )
-    }
-  }
-}
-```
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-    ## Warning: NAs introduced by coercion
-
-``` r
-# Display the resulting summary dataframe
-print(pcrit_summary_df)
-```
-
-    ##         fish_id Pcrit  Intercept  avg_po2 Adjusted_R2      p_value
-    ## 1  pcrit_TC1_C1    NA  33.429888 3.932815   0.6794638 2.713428e-02
-    ## 2  pcrit_TC2_C1    NA  18.887600 2.543358   0.7988098 1.028872e-02
-    ## 3  pcrit_TC3_C1    NA  21.953079 3.724351   0.8854625 3.249971e-03
-    ## 4  pcrit_TC4_C1    NA -10.798445 6.981611   0.9649980 2.968217e-04
-    ## 5  pcrit_TC1_C2    NA -43.424981 9.104624   0.9650458 2.960085e-04
-    ## 6  pcrit_TC2_C2    NA   5.816034 6.441783   0.9608760 3.712670e-04
-    ## 7  pcrit_TC3_C2    NA -24.562041 5.824279   0.8242358 7.792201e-03
-    ## 8  pcrit_TC4_C2    NA  26.926039 4.149573   0.9135707 1.835811e-03
-    ## 9  pcrit_TC1_C3    NA  10.810093 5.771871   0.9442595 7.570509e-04
-    ## 10 pcrit_TC2_C3    NA -27.662824 6.324589   0.9967917 2.472444e-06
-    ## 11 pcrit_TC3_C3    NA -17.565666 7.024896   0.9825924 7.306611e-05

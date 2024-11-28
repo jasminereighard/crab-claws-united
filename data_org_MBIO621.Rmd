@@ -5,7 +5,7 @@ date: "2024-11-03"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 
 
@@ -1058,58 +1058,6 @@ print(pcrit_results)
 
 ```
 
-
-
-```{r}
-# Initialize an empty data frame to store the summary
-pcrit_summary_df <- data.frame(
-  fish_id = character(),
-  Pcrit = numeric(),
-  Intercept = numeric(),
-  avg_po2 = numeric(),
-  Adjusted_R2 = numeric(),
-  p_value = numeric(),
-  stringsAsFactors = FALSE
-)
-
-# Loop through the pcrit_results to extract relevant information
-for (fish_id in names(pcrit_results)) {
-  result <- pcrit_results[[fish_id]]
-  
-  # Ensure the result is valid and contains ModelSummary
-  if (!is.null(result$ModelSummary)) {
-    Pcrit <- as.numeric(result$Pcrit) # Extract Pcrit
-    model_summary <- result$ModelSummary
-    
-    # Check if model_summary is a valid summary.lm object
-    if ("coefficients" %in% names(model_summary)) {
-      # Extract coefficients and statistical metrics
-      intercept <- model_summary$coefficients["(Intercept)", "Estimate"]
-      avg_po2_slope <- model_summary$coefficients["avg.po2", "Estimate"]
-      adjusted_r2 <- model_summary$adj.r.squared
-      p_value <- model_summary$coefficients["avg.po2", "Pr(>|t|)"]
-      
-      # Add the row to the summary dataframe
-      pcrit_summary_df <- rbind(
-        pcrit_summary_df,
-        data.frame(
-          fish_id = fish_id,
-          Pcrit = Pcrit,
-          Intercept = intercept,
-          avg_po2 = avg_po2_slope,
-          Adjusted_R2 = adjusted_r2,
-          p_value = p_value,
-          stringsAsFactors = FALSE
-        )
-      )
-    }
-  }
-}
-
-# Display the resulting summary dataframe
-print(pcrit_summary_df)
-
-```
 
 
 
