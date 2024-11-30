@@ -1184,6 +1184,12 @@ print(pcrit_results)
 ```
 
 
+```{r}
+#saving MMR, SMR, and AS
+
+save(all_MMR, all_q20, aerobic_scope_values, file = "mbio621_data.RData")
+
+```
 
 
 

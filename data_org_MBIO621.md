@@ -2144,3 +2144,9 @@ print(pcrit_results)
     ## Residual standard error: 4.016 on 4 degrees of freedom
     ## Multiple R-squared:  0.8786, Adjusted R-squared:  0.8483 
     ## F-statistic: 28.96 on 1 and 4 DF,  p-value: 0.005763
+
+``` r
+#saving MMR, SMR, and AS
+
+save(all_MMR, all_q20, aerobic_scope_values, file = "mbio621_data.RData")
+```

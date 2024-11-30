@@ -1,0 +1,272 @@
+---
+title: "data_analysis"
+author: "Jasmine Reighard"
+date: "2024-11-03"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(dplyr)
+library(knitr)
+library(mclust)
+library(ggplot2)
+library(ggpubr)
+library(lubridate)
+library(stringr)
+library(mclust)
+library(readr)
+library(DescTools) #AUC
+library(stats)
+library(car) #normality and levene
+library(lme4)
+library(tidyr)
+library(emmeans)
+
+library(ggplot2)
+library(dplyr)
+library(tibble)
+
+
+#from hw11
+
+library(raster)
+library(lattice)
+library(agricolae)
+library(lme4)
+library(lmerTest)
+library(car)
+library(nlme)
+library(reshape2)
+library(ggplot2)
+library(multcomp)
+library(merTools)
+
+if (!require(lme4)) {
+  install.packages("lme4")
+  library(lme4)
+}
+if (!require(multcomp)) {
+  install.packages("multcomp")
+  library(multcomp)
+}
+if (!require(languageR)) {
+  install.packages("languageR")
+  library(languageR)
+}
+if (!require(LMERConvenienceFunctions)) {
+  install.packages("LMERConvenienceFunctions")
+  library(LMERConvenienceFunctions)
+}
+if (!require(emmeans)) {
+  install.packages("emmeans")
+  library(emmeans)
+}
+if (!require(MuMIn)) {
+  install.packages("MuMIn")
+  library(MuMIn)
+}
+if (!require(EnvStats)) {
+  install.packages("EnvStats")
+  library(EnvStats)
+}
+if (!require(broom.mixed)) {
+  install.packages("broom.mixed")
+  library(broom.mixed)
+}
+if (!require(lmerTest)) {
+  install.packages("lmerTest")
+  library(lmerTest)
+}
+if (!require(car)) {
+  install.packages("car")
+  library(car)
+}
+if (!require(outliers)) {
+  install.packages("outliers")
+  library(outliers)
+}
+if (!require(effectsize)) {
+  install.packages("effectsize")
+  library(effectsize)
+}
+if (!require(rcompanion)) {
+  install.packages("rcompanion")
+  library(rcompanion)
+}
+if (!require(MASS)) {
+  install.packages("MASS")
+  library(MASS)
+}
+if (!require(r2glmm)) {
+  install.packages("r2glmm")
+  library(r2glmm)
+}
+if (!require(pracma)) {
+  install.packages("pracma")
+  library(pracma)
+}
+
+options(max.print = .Machine$integer.max)
+
+```
+
+```{r}
+
+#load data saved from data org RMD 
+
+load("mbio621_data.RData")
+
+#load metadata csv
+metadata <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/meta_data.csv", stringsAsFactors = FALSE)
+
+head(metadata)
+print(metadata)
+
+
+
+
+```
+
+```{r}
+# Ensure the lists are named with fish_id as keys
+# all_MMR, all_q20, and aerobic_scope_values should have named elements where names match the fish_id values.
+
+# Convert the lists to dataframes for merging
+MMR_dfs <- data.frame(fish_id = names(all_MMR), MMR = unlist(all_MMR), stringsAsFactors = FALSE)
+SMR_dfs <- data.frame(fish_id = names(all_q20), SMR = unlist(all_q20), stringsAsFactors = FALSE)
+AS_dfs <- data.frame(fish_id = names(aerobic_scope_values), AS = unlist(aerobic_scope_values), stringsAsFactors = FALSE)
+
+
+# Merge the metadata dataframe with the newly created dataframes
+respdat <- metadata %>%
+  left_join(MMR_dfs, by = "fish_id") %>%
+  left_join(SMR_dfs, by = "fish_id") %>%
+  left_join(AS_dfs, by = "fish_id")
+
+respdat
+```
+
+
+```{r}
+
+longrespdat <- pivot_longer(respdat, cols = c(SMR, MMR, AS), names_to = "metric", values_to = "value")
+str(longrespdat)
+
+longrespdat$treatment <- as.factor(longrespdat$treatment)
+longrespdat$id <- as.factor(longrespdat$fish_id)
+longrespdat$when_arm_lost <- as.factor(longrespdat$when_arm_lost)
+longrespdat$limb_type <- as.factor(longrespdat$limb_type)
+longrespdat$metric <- as.factor(longrespdat$metric)
+longrespdat$mass <- longrespdat$new_mass
+longrespdat$arm_status <- as.factor(longrespdat$arm_status)
+
+
+str(longrespdat)
+
+```
+
+```{r}
+#exclude small fish !!!
+longrespdat <- longrespdat %>% 
+  filter(!fish_id %in% c("TC1_C3", "TC2_C2"))
+
+# Verify the changes
+table(longrespdat$fish_id)
+  
+```
+
+
+```{r}
+#linear mixed model mod1
+values_mod <- lmer(value ~ metric + metric:treatment + metric:mass + metric:treatment:mass + (1|id), data = longrespdat)
+
+summary(values_mod)
+
+Anova(values_mod)
+#anova of random effects
+#there is an effect of treatment 
+#no effect of mass across treatment groups
+#there is an effect of mass within groups 
+
+
+#just treatment! no mass 
+values_mod2 <- lmer(value ~ metric + metric:treatment + (1|id), data = longrespdat)
+
+summary(values_mod2)
+
+Anova(values_mod2)
+
+
+
+```
+
+```{r}
+#slopes
+mass_slopes_mod <- emtrends(values_mod, ~metric:treatment, "mass")
+summary(mass_slopes_mod, infer = TRUE)
+#mass predicts MMR & AS in control fish 
+
+
+```
+
+```{r}
+#descriptive stats
+#--------Model 1-------------
+longrespdat %>%
+  group_by(treatment, metric) %>%
+  summarise(mean=mean(value))
+
+#pull out mean values
+
+emmeans_mod <- emmeans(values_mod, specs = c("metric", "treatment"))
+#model slays
+summary(emmeans_mod)
+
+
+ttest_mod <- emmeans(values_mod, pairwise ~ treatment|metric, adjust = "fdr")
+ttest_mod
+
+
+#--------Model 2-------------
+longrespdat %>%
+  group_by(treatment, metric) %>%
+  summarise(mean=mean(value))
+
+#pull out mean values
+
+emmeans_mod2 <- emmeans(values_mod2, specs = c("metric", "treatment"))
+#model slays
+summary(emmeans_mod2)
+
+
+ttest_mod2 <- emmeans(values_mod2, pairwise ~ treatment|metric, adjust = "fdr")
+ttest_mod2
+
+```
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
