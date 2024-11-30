@@ -102,7 +102,9 @@ resp_SMR_C1 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C1
 resp_SMR_C2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C2.csv", stringsAsFactors = FALSE)
 resp_SMR_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_C3.csv", stringsAsFactors = FALSE)
 
-#Load MMR
+#treatment
+
+resp_SMR_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/resp_SMR_T2.csv", stringsAsFactors = FALSE)
 ```
 
 ``` r
@@ -113,6 +115,8 @@ resp_SMR_C2$Clock.TIME <- as.POSIXct(resp_SMR_C2$Clock.TIME, format = "%m/%d/%y 
 resp_SMR_C3$Clock.TIME <- as.POSIXct(resp_SMR_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 
 #str(resp_SMR_C1)
+
+resp_SMR_T2$Clock.TIME <- as.POSIXct(resp_SMR_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 ```
 
 ``` r
@@ -138,7 +142,7 @@ process_dataset <- function(dataset) {
 
 #How you would write it with multiple datasets
 
-smr_datasets <- list(resp_SMR_C1, resp_SMR_C2, resp_SMR_C3)
+smr_datasets <- list(resp_SMR_C1, resp_SMR_C2, resp_SMR_C3, resp_SMR_T2)
 lapply(smr_datasets, process_dataset)
 ```
 
@@ -149,6 +153,9 @@ lapply(smr_datasets, process_dataset)
     ## NULL
     ## 
     ## [[3]]
+    ## NULL
+    ## 
+    ## [[4]]
     ## NULL
 
 ``` r
@@ -230,6 +237,39 @@ MMR_TC3_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_C3.c
     ## '/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_C3.csv'
 
 ``` r
+#MMR T2
+MMR_TC1_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC1_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/MMR_TC1_T2.csv'
+
+``` r
+MMR_TC2_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC2_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/MMR_TC2_T2.csv'
+
+``` r
+MMR_TC3_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/MMR_TC3_T2.csv'
+
+``` r
+MMR_TC4_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/MMR_TC4_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/MMR_TC4_T2.csv'
+
+``` r
 #convert date to date-time format for MMR dfs
 #trial 1 pre
 MMR_TC1_C1$Clock.TIME <- as.POSIXct(MMR_TC1_C1$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
@@ -247,6 +287,12 @@ MMR_TC4_C2$Clock.TIME <- as.POSIXct(MMR_TC4_C2$Clock.TIME, format = "%m/%d/%y %H
 MMR_TC1_C3$Clock.TIME <- as.POSIXct(MMR_TC1_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 MMR_TC2_C3$Clock.TIME <- as.POSIXct(MMR_TC2_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 MMR_TC3_C3$Clock.TIME <- as.POSIXct(MMR_TC3_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 2 pre
+MMR_TC1_T2$Clock.TIME <- as.POSIXct(MMR_TC1_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC2_T2$Clock.TIME <- as.POSIXct(MMR_TC2_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC3_T2$Clock.TIME <- as.POSIXct(MMR_TC3_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+MMR_TC4_T2$Clock.TIME <- as.POSIXct(MMR_TC4_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 ```
 
 ``` r
@@ -284,7 +330,8 @@ head(MMR_TC1_C1)
 # List of dataframes
 df_names <- c("MMR_TC1_C1", "MMR_TC2_C1", "MMR_TC3_C1", "MMR_TC4_C1",
               "MMR_TC1_C2", "MMR_TC2_C2", "MMR_TC3_C2", "MMR_TC4_C2",
-              "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3")
+              "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3",
+              "MMR_TC1_T2", "MMR_TC2_T2", "MMR_TC3_T2", "MMR_TC4_T2")
 
 # Loop through the dataframes
 for (df_name in df_names) {
@@ -341,7 +388,7 @@ head(MMR_TC1_C1)
 base_path <- "/Users/jasminereighard/Desktop/mbio621/raw_data"
 
 # Define control groups and experiment numbers
-control_groups <- c("C1", "C2", "C3")
+control_groups <- c("C1", "C2", "C3", "T2")
 experiment_numbers <- 1:4
 
 # Create a list to store the data
@@ -412,7 +459,8 @@ print(names(pcrit_data))  # List all the data frames loaded
 
     ##  [1] "pcrit_TC1_C1" "pcrit_TC2_C1" "pcrit_TC3_C1" "pcrit_TC4_C1" "pcrit_TC1_C2"
     ##  [6] "pcrit_TC2_C2" "pcrit_TC3_C2" "pcrit_TC4_C2" "pcrit_TC1_C3" "pcrit_TC2_C3"
-    ## [11] "pcrit_TC3_C3" "pcrit_TC4_C3"
+    ## [11] "pcrit_TC3_C3" "pcrit_TC4_C3" "pcrit_TC1_T2" "pcrit_TC2_T2" "pcrit_TC3_T2"
+    ## [16] "pcrit_TC4_T2"
 
 ``` r
 # Remove pcrit_TC4_C3 from the list
@@ -465,124 +513,38 @@ head(pcrit_TC1_C1)
     ## 6 0.0043171296 NA  TC1_C1
 
 ``` r
-# List of pcrit dataframes
-pcrit_names <- names(pcrit_data)
-
-# Create a list to store the new pcrit subsets
-pcrit_subsets <- list()
-
-# Loop through the pcrit dataframes
-for (name in pcrit_names) {
-  # Get the dataframe from the list
-  df <- pcrit_data[[name]]
-  
-  # Filter rows where avg.po2 >= 30
-  subset_df <- df %>% filter(avg.po2 >= 5)
-  
-  # Check if any rows remain after filtering
-  if (nrow(subset_df) == 0) {
-    message(name, " has no measurements with avg.po2 >= 50.")
-  }
-  
-  # Add the subset to the list with a new name
-  new_name <- paste0("po50_", name)
-  pcrit_subsets[[new_name]] <- subset_df
-}
-
-# Access the new subset dataframes
-print(names(pcrit_subsets))  # List the names of the new subset dataframes
-```
-
-    ##  [1] "po50_pcrit_TC1_C1" "po50_pcrit_TC2_C1" "po50_pcrit_TC3_C1"
-    ##  [4] "po50_pcrit_TC4_C1" "po50_pcrit_TC1_C2" "po50_pcrit_TC2_C2"
-    ##  [7] "po50_pcrit_TC3_C2" "po50_pcrit_TC4_C2" "po50_pcrit_TC1_C3"
-    ## [10] "po50_pcrit_TC2_C3" "po50_pcrit_TC3_C3"
-
-``` r
-# Move the dataframes in the pcrit_subsets list into the environment
-list2env(pcrit_subsets, envir = .GlobalEnv)
-```
-
-    ## <environment: R_GlobalEnv>
-
-``` r
-head(po50_pcrit_TC1_C1)
-```
-
-    ##            Clock.TIME TIME.HOURS  TIME.UNIX       MO2       SLOPE Intercept
-    ## 1 2024-11-20 09:58:13 0.01722222 1732132753 198.19331 -0.06066321  93.86238
-    ## 2 2024-11-20 09:59:15 0.03472222 1732132815 163.75782 -0.05012316  90.34090
-    ## 3 2024-11-20 10:00:17 0.05166667 1732132877 166.92574 -0.05109280  86.95273
-    ## 4 2024-11-20 10:01:20 0.06916667 1732132939  73.52465 -0.02250450  83.92497
-    ## 5 2024-11-20 10:02:22 0.08638889 1732133001 164.89086 -0.05046996  82.96280
-    ## 6 2024-11-20 10:03:24 0.10361111 1732133063 176.25929 -0.05394962  79.52485
-    ##    Pearson.R       R.2            P      Std.Err Measurement.duration.seconds
-    ## 1 -0.9971558 0.9943198 7.874095e-67 0.0006020492                           60
-    ## 2 -0.9954924 0.9910051 4.565753e-62 0.0006216895                           61
-    ## 3 -0.9938343 0.9877066 4.182991e-57 0.0007484600                           60
-    ## 4 -0.9919787 0.9840217 8.396721e-54 0.0003765461                           60
-    ## 5 -0.9824633 0.9652341 5.238797e-44 0.0012577070                           60
-    ## 6 -0.9919342 0.9839334 9.852722e-54 0.0009052191                           60
-    ##    avg.po2 median.po2 minimum.po2 max.po2 delta.po2 oxygen.solubility
-    ## 1 92.01215    91.9900      90.331  93.699     3.368          6.707583
-    ## 2 88.78708    88.8300      87.130  90.218     3.088          6.707583
-    ## 3 85.39440    85.2835      84.087  86.992     2.905          6.707583
-    ## 4 83.23858    83.2075      82.546  83.974     1.428          6.707583
-    ## 5 81.42347    81.6005      79.769  82.545     2.776          6.707583
-    ## 6 77.87938    77.7500      76.535  79.556     3.021          6.707583
-    ##   ratio.vreal.fish total.experiment.duration.hours  minutes seconds
-    ## 1         13.52991                      0.01722222 1.033333      62
-    ## 2         13.52991                      0.03472222 2.083333     125
-    ## 3         13.52991                      0.05166667 3.100000     186
-    ## 4         13.52991                      0.06916667 4.150000     249
-    ## 5         13.52991                      0.08638889 5.183333     311
-    ## 6         13.52991                      0.10361111 6.216667     373
-    ##           days  X fish_id
-    ## 1 0.0007175926 NA  TC1_C1
-    ## 2 0.0014467593 NA  TC1_C1
-    ## 3 0.0021527778 NA  TC1_C1
-    ## 4 0.0028819444 NA  TC1_C1
-    ## 5 0.0035995370 NA  TC1_C1
-    ## 6 0.0043171296 NA  TC1_C1
-
-``` r
+#ADDING MMR TO SMR DFs
 # List of MMR and SMR dataframe names
 MMR_names <- c("MMR_TC1_C1", "MMR_TC2_C1", "MMR_TC3_C1", "MMR_TC4_C1",
                "MMR_TC1_C2", "MMR_TC2_C2", "MMR_TC3_C2", "MMR_TC4_C2",
-               "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3")
+               "MMR_TC1_C3", "MMR_TC2_C3", "MMR_TC3_C3",
+               "MMR_TC1_T2", "MMR_TC2_T2", "MMR_TC3_T2", "MMR_TC4_T2")
 
 SMR_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
                "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
-               "TC1_C3", "TC2_C3", "TC3_C3")
+               "TC1_C3", "TC2_C3", "TC3_C3",
+               "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2")
 
-pcrit_names <- c("pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
-                 "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
-                 "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3")
 
-# Loop through both lists to perform a left join
+# Loop through both lists to combine dataframes
 for (i in seq_along(MMR_names)) {
-  # Get the MMR and SMR dataframes
+  # Retrieve the MMR and SMR dataframes
   MMR_df <- get(MMR_names[i])
   SMR_df <- get(SMR_names[i])
-  pcrit_df <- get(pcrit_names[i])
   
-  # Subtract 10 hours from the Clock.TIME in the pcrit dataframe
-  if ("Clock.TIME" %in% colnames(pcrit_df)) {
-    pcrit_df$Clock.TIME <- pcrit_df$Clock.TIME - lubridate::hours(10)
-  }
+  # Add a priority column to each dataframe
+  MMR_df$priority <- 1
+  SMR_df$priority <- 2
   
-  # Add a column to prioritize the order
-  MMR_df <- MMR_df %>% mutate(priority = 1)
-  SMR_df <- SMR_df %>% mutate(priority = 2)
-  pcrit_df <- pcrit_df %>% mutate(priority = 3)
+  # Combine the dataframes and sort by priority
+  combined_df <- rbind(MMR_df, SMR_df)
+  combined_df <- combined_df[order(combined_df$priority), ]
   
-  # Combine the dataframes with left join
-  combined_df <- bind_rows(MMR_df, SMR_df, pcrit_df) %>%
-    arrange(priority) %>%  # Ensure MMR comes first
-    select(-priority)      # Remove the priority column
+  # Remove the priority column
+  combined_df$priority <- NULL
   
   # Assign the combined dataframe to the SMR name
-  assign(SMR_names[i], combined_df)
+  assign(SMR_names[i], combined_df, envir = .GlobalEnv)
 }
 ```
 
@@ -785,6 +747,73 @@ postback_TC3_C3 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postbac
     ## '/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_C3.csv'
 
 ``` r
+#preback C2
+preback_TC1_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC1_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/preback_TC1_T2.csv'
+
+``` r
+preback_TC2_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC2_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/preback_TC2_T2.csv'
+
+``` r
+preback_TC3_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC3_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/preback_TC3_T2.csv'
+
+``` r
+preback_TC4_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/preback_TC4_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/preback_TC4_T2.csv'
+
+``` r
+#postback C2
+
+postback_TC1_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC1_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/postback_TC1_T2.csv'
+
+``` r
+postback_TC2_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC2_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/postback_TC2_T2.csv'
+
+``` r
+postback_TC3_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/postback_TC3_T2.csv'
+
+``` r
+postback_TC4_T2 <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/postback_TC4_T2.csv", stringsAsFactors = FALSE)
+```
+
+    ## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+    ## incomplete final line found by readTableHeader on
+    ## '/Users/jasminereighard/Desktop/mbio621/data/postback_TC4_T2.csv'
+
+``` r
 #convert date to date-time format for background dfs
 
 #Control 25.5
@@ -827,7 +856,35 @@ preback_TC3_C3$Clock.TIME <- as.POSIXct(preback_TC3_C3$Clock.TIME, format = "%m/
 postback_TC1_C3$Clock.TIME <- as.POSIXct(postback_TC1_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 postback_TC2_C3$Clock.TIME <- as.POSIXct(postback_TC2_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 postback_TC3_C3$Clock.TIME <- as.POSIXct(postback_TC3_C3$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 2 pre TREATMENT
+preback_TC1_T2$Clock.TIME <- as.POSIXct(preback_TC1_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC2_T2$Clock.TIME <- as.POSIXct(preback_TC2_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC3_T2$Clock.TIME <- as.POSIXct(preback_TC3_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+preback_TC4_T2$Clock.TIME <- as.POSIXct(preback_TC4_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+
+#trial 2 post
+postback_TC1_T2$Clock.TIME <- as.POSIXct(postback_TC1_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC2_T2$Clock.TIME <- as.POSIXct(postback_TC2_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC3_T2$Clock.TIME <- as.POSIXct(postback_TC3_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
+postback_TC4_T2$Clock.TIME <- as.POSIXct(postback_TC4_T2$Clock.TIME, format = "%m/%d/%y %H:%M", tz = "GMT")
 ```
+
+``` r
+meta_data <- read.csv("/Users/jasminereighard/Desktop/mbio621/data/meta_data.csv", stringsAsFactors = FALSE)
+str(meta_data)
+```
+
+    ## 'data.frame':    15 obs. of  9 variables:
+    ##  $ date         : chr  "11/19/24" "11/19/24" "11/19/24" "11/19/24" ...
+    ##  $ treatment    : chr  "Control" "Control" "Control" "Control" ...
+    ##  $ fish_id      : chr  "TC1_C1" "TC2_C1" "TC3_C1" "TC4_C1" ...
+    ##  $ weight_g     : num  11.7 15.02 15.35 11.64 9.62 ...
+    ##  $ new_mass     : num  2.56 3.28 3.35 2.54 2.1 ...
+    ##  $ temp         : num  25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 28.5 28.5 ...
+    ##  $ arm_status   : int  0 0 1 1 0 1 1 1 0 1 ...
+    ##  $ when_arm_lost: chr  "good" "good" "before" "during" ...
+    ##  $ limb_type    : chr  "none" "none" "both" "claw" ...
 
 ``` r
 #If you need to correct the weight of the fish, here is the code
@@ -844,16 +901,26 @@ true_Vre_TC4_C2 <- (0.170*1000)-9.73 #TC4_C2,
 true_Vre_TC2_C3 <- (0.170*1000)-13.87 #TC2_C3, 
 true_Vre_TC3_C3 <- (0.170*1000)-9.82 #TC3_C3, 
 
+#T2
+true_Vre_TC1_T2 <- (0.170*1000)-16.34
+true_Vre_TC3_T2 <- (0.170*1000)-17.39
+
+
+
 ##replace Mo2 w/ initial fish weight set to 0.01 C2
 
 preback_TC1_C2$MO2 <- ((preback_TC1_C2$MO2/(0.170*1000))*10)*true_Vre_TC1_C2/9.62
 preback_TC3_C2$MO2 <- ((preback_TC3_C2$MO2/(0.170*1000))*10)*true_Vre_TC3_C2/9.34
 preback_TC4_C2$MO2 <- ((preback_TC4_C2$MO2/(0.170*1000))*10)*true_Vre_TC4_C2/9.73
 
-##replace Mo2 w/ initial fish weight set to 0.06 C3
+##replace Mo2 w/ initial fish weight set to 0.006 C3
 
 preback_TC2_C3$MO2 <- ((preback_TC2_C3$MO2/(0.170*1000))*6)*true_Vre_TC2_C3/13.87
 preback_TC3_C3$MO2 <- ((preback_TC3_C3$MO2/(0.170*1000))*6)*true_Vre_TC3_C3/9.82
+
+#Replace T2, initial weight set to 0.015
+preback_TC1_T2$MO2 <- ((preback_TC1_T2$MO2/(0.170*1000))*10)*true_Vre_TC1_T2/16.34
+preback_TC3_T2$MO2 <- ((preback_TC3_T2$MO2/(0.170*1000))*10)*true_Vre_TC3_T2/17.39
 ```
 
 ``` r
@@ -870,7 +937,8 @@ adjust_MO2 <- function(df) {
 #Make a list of dfs for prebackground & named list
 preback_list <- list(preback_TC1_C1, preback_TC2_C1, preback_TC3_C1, preback_TC4_C1, 
                      preback_TC1_C2, preback_TC2_C2, preback_TC3_C2, preback_TC4_C2,
-                     preback_TC1_C3, preback_TC2_C3, preback_TC3_C3)
+                     preback_TC1_C3, preback_TC2_C3, preback_TC3_C3,
+                     preback_TC1_T2, preback_TC2_T2, preback_TC3_T2, preback_TC4_T2)
 
 #Apply adjust_MO2 to each preback df
 preback_list <- lapply(preback_list, adjust_MO2)
@@ -879,7 +947,8 @@ preback_list <- lapply(preback_list, adjust_MO2)
 #assign back to individual dfs
 names(preback_list) <- c("preback_TC1_C1", "preback_TC2_C1", "preback_TC3_C1", "preback_TC4_C1",
                          "preback_TC1_C2", "preback_TC2_C2", "preback_TC3_C2", "preback_TC4_C2",
-                         "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3")
+                         "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3",
+                         "preback_TC1_T2", "preback_TC2_T2", "preback_TC3_T2", "preback_TC4_T2")
 
 # Assign the results back to their respective variables in the global environment
 list2env(preback_list, envir = .GlobalEnv) 
@@ -895,12 +964,64 @@ list2env(preback_list, envir = .GlobalEnv)
 ```
 
 ``` r
+# List of dataframes to update (replace with your actual list of dataframe names)
+dataframe_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
+               "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
+               "TC1_C3", "TC2_C3", "TC3_C3",
+               "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2",
+               "pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
+               "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
+               "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3",
+               "pcrit_TC1_T2", "pcrit_TC2_T2", "pcrit_TC3_T2", "pcrit_TC4_T2",
+               "preback_TC1_C1", "preback_TC2_C1", "preback_TC3_C1", "preback_TC4_C1",
+               "preback_TC1_C2", "preback_TC2_C2", "preback_TC3_C2", "preback_TC4_C2",
+               "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3",
+               "preback_TC1_T2", "preback_TC2_T2", "preback_TC3_T2", "preback_TC4_T2",
+               "postback_TC1_C1", "postback_TC2_C1", "postback_TC3_C1", "postback_TC4_C1",
+               "postback_TC1_C2", "postback_TC2_C2", "postback_TC3_C2", "postback_TC4_C2",
+               "postback_TC1_C3", "postback_TC2_C3", "postback_TC3_C3",
+               "postback_TC1_T2", "postback_TC2_T2", "postback_TC3_T2", "postback_TC4_T2")
+
+update_mo2 <- function(dataframe_names, meta_data) {
+  for (df_name in dataframe_names) {
+    # Extract the dataframe
+    df <- get(df_name, envir = .GlobalEnv)
+    
+    # Dynamically extract fish_id by removing prefixes like "pcrit_", "preback_", "postback_"
+    fish_id <- sub("^(pcrit_|preback_|postback_)?", "", df_name)
+    
+    # Get the corresponding new_mass value from meta_data
+    weight_g <- meta_data$weight_g[meta_data$fish_id == fish_id]
+    new_mass <- meta_data$new_mass[meta_data$fish_id == fish_id]
+    
+    
+    if (length(new_mass) == 1 && !is.na(new_mass)) {
+      # Calculate true_Vre
+      true_Vre <- (0.170 * 1000) - new_mass
+      
+      # Update the MO2 column
+      df$MO2 <- ((df$MO2 / (0.170 * 1000)) * weight_g) * true_Vre / new_mass
+      
+      # Save the updated dataframe back to its original name
+      assign(df_name, df, envir = .GlobalEnv)
+    } else {
+      message("No matching new_mass found for ", fish_id)
+    }
+  }
+}
+
+
+update_mo2(dataframe_names, meta_data)
+```
+
+``` r
 #Now weʻre going to combine pre and post background dfs together
 
 #make a list for postbackground dfs
 postback_list <- list(postback_TC1_C1, postback_TC2_C1, postback_TC3_C1, postback_TC4_C1, 
                      postback_TC1_C2, postback_TC2_C2, postback_TC3_C2, postback_TC4_C2,
-                     postback_TC1_C3, postback_TC2_C3, postback_TC3_C3)
+                     postback_TC1_C3, postback_TC2_C3, postback_TC3_C3,
+                     postback_TC1_T2, postback_TC2_T2, postback_TC3_T2, postback_TC4_T2)
 
 
 # Combine pre and post trial data frames
@@ -909,7 +1030,8 @@ combinedbg_list <- Map(rbind, preback_list, postback_list)
 # Assign names to the combined data frames
 names(combinedbg_list) <- c("TC1_C1_bg", "TC2_C1_bg", "TC3_C1_bg", "TC4_C1_bg", 
 "TC1_C2_bg", "TC2_C2_bg", "TC3_C2_bg", "TC4_C2_bg",
-"TC1_C3_bg", "TC2_C3_bg", "TC3_C3_bg")
+"TC1_C3_bg", "TC2_C3_bg", "TC3_C3_bg",
+"TC1_T2_bg", "TC2_T2_bg", "TC3_T2_bg", "TC4_T2_bg")
 
 # Assign the results back to their respective variables in the global environment
 list2env(combinedbg_list, envir = .GlobalEnv)
@@ -925,7 +1047,8 @@ list2env(combinedbg_list, envir = .GlobalEnv)
 #make a list of combined background dfs
 background_list <- list(TC1_C1_bg, TC2_C1_bg, TC3_C1_bg, TC4_C1_bg, 
    TC1_C2_bg, TC2_C2_bg, TC3_C2_bg, TC4_C2_bg,
-   TC1_C3_bg, TC2_C3_bg, TC3_C3_bg)
+   TC1_C3_bg, TC2_C3_bg, TC3_C3_bg,
+   TC1_T2_bg, TC2_T2_bg, TC3_T2_bg, TC4_T2_bg)
 
 # Apply the lm function to each data frame
 bg_regressions <- lapply(background_list, function(df) lm(MO2 ~ Clock.TIME, data = df))
@@ -939,7 +1062,8 @@ bg_regressions <- lapply(background_list, function(df) lm(MO2 ~ Clock.TIME, data
 names(bg_regressions) <- c(
   "regression_TC1_C1", "regression_TC2_C1", "regression_TC3_C1", "regression_TC4_C1",
   "regression_TC1_C2", "regression_TC2_C2", "regression_TC3_C2", "regression_TC4_C2",
-  "regression_TC1_C3", "regression_TC2_C3", "regression_TC3_C3") 
+  "regression_TC1_C3", "regression_TC2_C3", "regression_TC3_C3",
+  "regression_TC1_T2", "regression_TC2_T2", "regression_TC3_T2", "regression_TC4_T2") 
 
 # Assign the results back to their respective variables in the global environment
 list2env(bg_regressions, envir = .GlobalEnv)
@@ -969,6 +1093,11 @@ TC1_C3_bg_estimates = predict(regression_TC1_C3, TC1_C3)
 TC2_C3_bg_estimates = predict(regression_TC2_C3, TC2_C3)
 TC3_C3_bg_estimates = predict(regression_TC3_C3, TC3_C3)
 
+#T2
+TC1_T2_bg_estimates = predict(regression_TC1_T2, TC1_T2)
+TC2_T2_bg_estimates = predict(regression_TC2_T2, TC2_T2)
+TC3_T2_bg_estimates = predict(regression_TC3_T2, TC3_T2)
+TC4_T2_bg_estimates = predict(regression_TC4_T2, TC4_T2)
 
 
 #This line uses the predict() function to make predictions based on the linear model (regression1_t1) and a new dataset, cs1_t1.
@@ -994,6 +1123,12 @@ TC4_C2$MO2 <- TC4_C2$MO2 - TC4_C2_bg_estimates
 TC1_C3$MO2 <- TC1_C3$MO2 - TC1_C3_bg_estimates
 TC2_C3$MO2 <- TC2_C3$MO2 - TC2_C3_bg_estimates
 TC3_C3$MO2 <- TC3_C3$MO2 - TC3_C3_bg_estimates
+
+#C2
+TC1_T2$MO2 <- TC1_T2$MO2 - TC1_T2_bg_estimates
+TC2_T2$MO2 <- TC2_T2$MO2 - TC2_T2_bg_estimates
+TC3_T2$MO2 <- TC3_T2$MO2 - TC3_T2_bg_estimates
+TC4_T2$MO2 <- TC4_T2$MO2 - TC4_T2_bg_estimates
 ```
 
 ``` r
@@ -1015,6 +1150,12 @@ pcrit_TC4_C2_bg_estimates = predict(regression_TC4_C2, pcrit_TC4_C2)
 pcrit_TC1_C3_bg_estimates = predict(regression_TC1_C3, pcrit_TC1_C3)
 pcrit_TC2_C3_bg_estimates = predict(regression_TC2_C3, pcrit_TC2_C3)
 pcrit_TC3_C3_bg_estimates = predict(regression_TC3_C3, pcrit_TC3_C3)
+
+#T2
+pcrit_TC1_T2_bg_estimates = predict(regression_TC1_T2, pcrit_TC1_T2)
+pcrit_TC2_T2_bg_estimates = predict(regression_TC2_T2, pcrit_TC2_T2)
+pcrit_TC3_T2_bg_estimates = predict(regression_TC3_T2, pcrit_TC3_T2)
+pcrit_TC4_T2_bg_estimates = predict(regression_TC4_T2, pcrit_TC4_T2)
 ```
 
 ``` r
@@ -1036,6 +1177,12 @@ pcrit_TC4_C2$MO2 <- pcrit_TC4_C2$MO2 - pcrit_TC4_C2_bg_estimates
 pcrit_TC1_C3$MO2 <- pcrit_TC1_C3$MO2 - pcrit_TC1_C3_bg_estimates
 pcrit_TC2_C3$MO2 <- pcrit_TC2_C3$MO2 - pcrit_TC2_C3_bg_estimates
 pcrit_TC3_C3$MO2 <- pcrit_TC3_C3$MO2 - pcrit_TC3_C3_bg_estimates
+
+#T2
+pcrit_TC1_T2_bg_estimates = predict(regression_TC1_T2, pcrit_TC1_T2)
+pcrit_TC2_T2_bg_estimates = predict(regression_TC2_T2, pcrit_TC2_T2)
+pcrit_TC3_T2_bg_estimates = predict(regression_TC3_T2, pcrit_TC3_T2)
+pcrit_TC4_T2_bg_estimates = predict(regression_TC4_T2, pcrit_TC4_T2)
 ```
 
 ``` r
@@ -1058,6 +1205,12 @@ TC4_C2_calcSMR <- calcSMR(TC4_C2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2)
 TC1_C3_calcSMR <- calcSMR(TC1_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
 TC2_C3_calcSMR <- calcSMR(TC2_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
 TC3_C3_calcSMR <- calcSMR(TC3_C3$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+
+#TREATMENT 2 
+TC1_T2_calcSMR <- calcSMR(TC1_T2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC2_T2_calcSMR <- calcSMR(TC2_T2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC3_T2_calcSMR <- calcSMR(TC3_T2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
+TC4_T2_calcSMR <- calcSMR(TC4_T2$MO2, q=c(0.1,0.15,0.2,0.25,0.3), G=2) 
 ```
 
 ``` r
@@ -1087,7 +1240,8 @@ create_line_data <- function(calcSMR_data) {
 calcSMR_datasets <- list(
   TC1_C1_calcSMR, TC2_C1_calcSMR, TC3_C1_calcSMR, TC4_C1_calcSMR,
   TC1_C2_calcSMR, TC2_C2_calcSMR, TC3_C2_calcSMR, TC4_C2_calcSMR,
-  TC1_C3_calcSMR, TC2_C3_calcSMR, TC3_C3_calcSMR)
+  TC1_C3_calcSMR, TC2_C3_calcSMR, TC3_C3_calcSMR,
+  TC1_T2_calcSMR, TC2_T2_calcSMR, TC3_T2_calcSMR, TC4_T2_calcSMR)
 
 
 # Assign names to the SMR data
@@ -1097,7 +1251,8 @@ calcSMR_datasets <- list(
 names(calcSMR_datasets) <- c(
   "line_data_TC1_C1", "line_data_TC2_C1", "line_data_TC3_C1", "line_data_TC4_C1",
   "line_data_TC1_C2", "line_data_TC2_C2", "line_data_TC3_C2", "line_data_TC4_C2",
-  "line_data_TC1_C3", "line_data_TC2_C3", "line_data_TC3_C3")
+  "line_data_TC1_C3", "line_data_TC2_C3", "line_data_TC3_C3",
+  "line_data_TC1_T2", "line_data_TC2_T2", "line_data_TC3_T2", "line_data_TC4_T2")
 # Apply the create_line_data function to each dataset
 line_data_results <- lapply(calcSMR_datasets, create_line_data)
 
@@ -1118,11 +1273,13 @@ list2env(line_data_results, .GlobalEnv)
 
 smr_dataframes <- list(TC1_C1, TC2_C1, TC3_C1, TC4_C1, 
                        TC1_C2, TC2_C2, TC3_C2, TC4_C2,
-                       TC1_C3, TC2_C3, TC3_C3)
+                       TC1_C3, TC2_C3, TC3_C3,
+                       TC1_T2, TC2_T2, TC3_T2, TC4_T2)
 
 names(smr_dataframes) <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
                            "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
-                           "TC1_C3", "TC2_C3", "TC3_C3")
+                           "TC1_C3", "TC2_C3", "TC3_C3",
+                           "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2")
 ```
 
 ``` r
@@ -1152,7 +1309,7 @@ plot_smr_data <- function(fish_id, smr_data_list, line_data_list) {
     ) +
     scale_y_continuous(
       limits = c(y_min, y_max),  # Set y-axis limits
-      breaks = seq(y_min, y_max, by = 10),  # Set y-axis breaks
+      breaks = seq(y_min, y_max, by = 50),  # Set y-axis breaks
       labels = scales::number_format(accuracy = 1)  # Round y-axis labels to whole numbers
     ) +
     scale_x_datetime(date_labels = "%H:%M", date_breaks = "2 hour") +
@@ -1202,7 +1359,7 @@ for (fish_id in names(smr_dataframes)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-11.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-15.png)<!-- -->
 
 ``` r
 # Function to calculate the mean distances of all corr_MO2 values +2 above double normal & -2 below q20
@@ -1213,14 +1370,14 @@ calculate_distances <- function(data, calcSMR_data) {
   filtered_data %>%
     mutate(
       dist_Double_Normal = abs(MO2 - calcSMR_data[[1]][1]),
-      dist_q20 = abs(MO2 - calcSMR_data[[2]][1]),
+      dist_Q10 = abs(MO2 - calcSMR_data[[2]][1]),
       dist_Q15 = abs(MO2 - calcSMR_data[[2]][2]),
       dist_Q20 = abs(MO2 - calcSMR_data[[2]][3]),
       dist_Q25 = abs(MO2 - calcSMR_data[[2]][4])
     ) %>%
     summarise(
       mean_dist_Double_Normal = mean(dist_Double_Normal, na.rm = TRUE),
-      mean_dist_q20 = mean(dist_q20, na.rm = TRUE),
+      mean_dist_Q10 = mean(dist_Q10, na.rm = TRUE),
       mean_dist_Q15 = mean(dist_Q15, na.rm = TRUE),
       mean_dist_Q20 = mean(dist_Q20, na.rm = TRUE),
       mean_dist_Q25 = mean(dist_Q25, na.rm = TRUE)
@@ -1244,30 +1401,38 @@ distance_summaries_df <- do.call(rbind, lapply(seq_along(distance_summaries), fu
 print(distance_summaries_df)
 ```
 
-    ##      Fish mean_dist_Double_Normal mean_dist_q20 mean_dist_Q15 mean_dist_Q20
-    ## 1  TC1_C1                5.224439      4.743684      3.514724      3.268867
-    ## 2  TC2_C1                7.337244      8.388356      5.755591      4.705470
-    ## 3  TC3_C1               10.429164     12.068265      8.354099      7.367226
-    ## 4  TC4_C1               11.625146     15.647054     11.911447      8.402781
-    ## 5  TC1_C2               10.153044     13.262098      7.437971      6.069993
-    ## 6  TC2_C2                6.878797      7.221212      6.170213      5.516257
-    ## 7  TC3_C2               11.214921     10.449278      7.510628      6.569753
-    ## 8  TC4_C2                7.145717     11.000440      5.033567      4.374629
-    ## 9  TC1_C3                9.327408     10.729945      7.084310      5.993268
-    ## 10 TC2_C3                9.882765     25.289514     13.973324      9.308088
-    ## 11 TC3_C3               14.556662      8.888940      7.676654      7.016168
+    ##      Fish mean_dist_Double_Normal mean_dist_Q10 mean_dist_Q15 mean_dist_Q20
+    ## 1  TC1_C1                19.44591      17.40032      11.13841      9.237152
+    ## 2  TC2_C1                31.20264      25.62671      22.38709     19.347513
+    ## 3  TC3_C1                41.22373      41.44227      32.89610     28.279253
+    ## 4  TC4_C1                56.76418      36.84690      31.72707     26.653854
+    ## 5  TC1_C2                36.74942      38.11601      22.64968     17.129939
+    ## 6  TC2_C2                63.77501      50.61748      43.19005     36.272509
+    ## 7  TC3_C2                43.89036      43.62855      24.55758     23.521275
+    ## 8  TC4_C2                29.07442      25.95053      17.90622     15.725856
+    ## 9  TC1_C3                45.15712      43.25451      27.11181     21.362384
+    ## 10 TC2_C3                15.24326      18.59451      10.09860      8.271268
+    ## 11 TC3_C3                55.69516      39.39274      19.31823     19.244758
+    ## 12 TC1_T2                60.94916      33.12574      26.97784     23.146441
+    ## 13 TC2_T2                67.40468      43.00170      34.57293     30.132145
+    ## 14 TC3_T2                17.82505      13.69540      26.28387     36.134299
+    ## 15 TC4_T2                31.75638      29.78109      20.39433     20.220755
     ##    mean_dist_Q25
-    ## 1       4.263212
-    ## 2       4.144506
-    ## 3       6.286615
-    ## 4       7.022583
-    ## 5       6.091115
-    ## 6       4.795748
-    ## 7       7.348705
-    ## 8       4.694882
-    ## 9       6.379394
-    ## 10      8.544888
-    ## 11      8.154985
+    ## 1       11.73784
+    ## 2       18.02865
+    ## 3       22.89736
+    ## 4       22.32751
+    ## 5       17.76750
+    ## 6       31.52773
+    ## 7       33.10752
+    ## 8       20.43182
+    ## 9       24.00488
+    ## 10      11.61282
+    ## 11      45.19135
+    ## 12      21.80417
+    ## 13      28.05893
+    ## 14      93.80060
+    ## 15      28.34567
 
 ``` r
 #Now weʻre going to extract our values for data analyses! 
@@ -1293,43 +1458,55 @@ apply_extract_q20 <- function(smr_results_list) {
 }
 
 # Extract q20 values for all smr results
-control_q20 <- apply_extract_q20(calcSMR_datasets)
+all_q20 <- apply_extract_q20(calcSMR_datasets)
 
-print(control_q20)
+print(all_q20)
 ```
 
     ## $TC1_C1
-    ## [1] 48.83579
+    ## [1] 219.2513
     ## 
     ## $TC2_C1
-    ## [1] 56.39584
+    ## [1] 266.0357
     ## 
     ## $TC3_C1
-    ## [1] 85.86303
+    ## [1] 384.417
     ## 
     ## $TC4_C1
-    ## [1] 41.60105
+    ## [1] 225.2951
     ## 
     ## $TC1_C2
-    ## [1] 161.1708
+    ## [1] 743.2031
     ## 
     ## $TC2_C2
-    ## [1] 58.01047
+    ## [1] 272.0468
     ## 
     ## $TC3_C2
-    ## [1] 58.9294
+    ## [1] 308.389
     ## 
     ## $TC4_C2
-    ## [1] 93.82691
+    ## [1] 447.6744
     ## 
     ## $TC1_C3
-    ## [1] 73.7792
+    ## [1] 406.657
     ## 
     ## $TC2_C3
-    ## [1] 178.4134
+    ## [1] 851.2558
     ## 
     ## $TC3_C3
-    ## [1] 22.66458
+    ## [1] 255.3019
+    ## 
+    ## $TC1_T2
+    ## [1] 274.6359
+    ## 
+    ## $TC2_T2
+    ## [1] 338.4395
+    ## 
+    ## $TC3_T2
+    ## [1] 339.7384
+    ## 
+    ## $TC4_T2
+    ## [1] 361.151
 
 ``` r
 #Example code for when adding other treatment groups 
@@ -1340,11 +1517,13 @@ print(control_q20)
 ``` r
 smr_dataframes <- list(TC1_C1, TC2_C1, TC3_C1, TC4_C1, 
                        TC1_C2, TC2_C2, TC3_C2, TC4_C2,
-                       TC1_C3, TC2_C3, TC3_C3)
+                       TC1_C3, TC2_C3, TC3_C3,
+                       TC1_C2, TC2_C2, TC3_C2, TC4_C2)
 
 names(smr_dataframes) <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
                            "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
-                           "TC1_C3", "TC2_C3", "TC3_C3")
+                           "TC1_C3", "TC2_C3", "TC3_C3",
+                           "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2")
 
 calculate_MMR <- function(smr_data_list) {
   MMR_values <- list()
@@ -1357,44 +1536,56 @@ calculate_MMR <- function(smr_data_list) {
 }
 
 # Calculate MMR values
-control_MMR <- calculate_MMR(smr_dataframes)
+all_MMR <- calculate_MMR(smr_dataframes)
 
 # Print the list to verify
-print(control_MMR)
+print(all_MMR)
 ```
 
     ## $TC1_C1
-    ## [1] 316.7053
+    ## [1] 1427.324
     ## 
     ## $TC2_C1
-    ## [1] 348.6152
+    ## [1] 1564.327
     ## 
     ## $TC3_C1
-    ## [1] 332.9836
+    ## [1] 1493.537
     ## 
     ## $TC4_C1
-    ## [1] 427.1228
+    ## [1] 1925.103
     ## 
     ## $TC1_C2
-    ## [1] 440.7338
+    ## [1] 1995.983
     ## 
     ## $TC2_C2
-    ## [1] 775.825
+    ## [1] 3507.073
     ## 
     ## $TC3_C2
-    ## [1] 410.7455
+    ## [1] 1862.931
     ## 
     ## $TC4_C2
-    ## [1] 406.4257
+    ## [1] 1840.884
     ## 
     ## $TC1_C3
-    ## [1] 524.7147
+    ## [1] 2434.134
     ## 
     ## $TC2_C3
-    ## [1] 314.6415
+    ## [1] 1437.63
     ## 
     ## $TC3_C3
-    ## [1] 509.9121
+    ## [1] 2338.524
+    ## 
+    ## $TC1_T2
+    ## [1] 1995.983
+    ## 
+    ## $TC2_T2
+    ## [1] 3507.073
+    ## 
+    ## $TC3_T2
+    ## [1] 1862.931
+    ## 
+    ## $TC4_T2
+    ## [1] 1840.884
 
 ``` r
 # Define Function to Calculate Aerobic Scope
@@ -1403,43 +1594,55 @@ calc_aerobic_scope <- function(MMR, SMR) {
 }
 
 # Calculate aerobic scope for each dataset
-aerobic_scope_values <- mapply(calc_aerobic_scope, control_MMR, control_q20, SIMPLIFY = FALSE) 
+aerobic_scope_values <- mapply(calc_aerobic_scope, all_MMR, all_q20, SIMPLIFY = FALSE) 
 
 print(aerobic_scope_values)
 ```
 
     ## $TC1_C1
-    ## [1] 267.8695
+    ## [1] 1208.072
     ## 
     ## $TC2_C1
-    ## [1] 292.2193
+    ## [1] 1298.291
     ## 
     ## $TC3_C1
-    ## [1] 247.1206
+    ## [1] 1109.12
     ## 
     ## $TC4_C1
-    ## [1] 385.5217
+    ## [1] 1699.808
     ## 
     ## $TC1_C2
-    ## [1] 279.563
+    ## [1] 1252.78
     ## 
     ## $TC2_C2
-    ## [1] 717.8146
+    ## [1] 3235.026
     ## 
     ## $TC3_C2
-    ## [1] 351.8161
+    ## [1] 1554.542
     ## 
     ## $TC4_C2
-    ## [1] 312.5988
+    ## [1] 1393.21
     ## 
     ## $TC1_C3
-    ## [1] 450.9355
+    ## [1] 2027.477
     ## 
     ## $TC2_C3
-    ## [1] 136.2281
+    ## [1] 586.3737
     ## 
     ## $TC3_C3
-    ## [1] 487.2475
+    ## [1] 2083.222
+    ## 
+    ## $TC1_T2
+    ## [1] 1721.347
+    ## 
+    ## $TC2_T2
+    ## [1] 3168.633
+    ## 
+    ## $TC3_T2
+    ## [1] 1523.193
+    ## 
+    ## $TC4_T2
+    ## [1] 1479.733
 
 ``` r
 # Simplify = FALSES stores as a list
@@ -1480,6 +1683,7 @@ plot_pcrit_data <- function(fish_id, pcrit_data_list) {
   return(combined_plot)
 }
 
+
 # Generate a PDF with all pcrit plots
 pdf(file = file.path(figs_dir, "pcrit_quick_viz.pdf"), width = 14, height = 7)
 for (fish_id in names(pcrit_data)) {
@@ -1501,7 +1705,7 @@ for (fish_id in names(pcrit_data)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-11.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-15.png)<!-- -->
 
 ``` r
 #pcrit function
@@ -1535,7 +1739,7 @@ for (fish_id in names(pcrit_data)) {
     pcrit_model <- summary(pcrit_lm)
     
     # Retrieve the SMR value from the control_q20 list
-    SMR <- control_q20[[control_fish_id]]
+    SMR <- all_q20[[control_fish_id]]
     
     if (!is.null(SMR)) {  # Check if SMR exists for this fish_id
       Pcrit <- findPcrit(pcrit_model, SMR)
@@ -1555,7 +1759,7 @@ print(pcrit_results)
 
     ## $pcrit_TC1_C1
     ## $pcrit_TC1_C1$Pcrit
-    ## [1] "Pcrit =  1.76658479895126"
+    ## [1] "Pcrit =  45.0982768837736"
     ## 
     ## $pcrit_TC1_C1$ModelSummary
     ## 
@@ -1581,7 +1785,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C1
     ## $pcrit_TC2_C1$Pcrit
-    ## [1] "Pcrit =  13.7605680308732"
+    ## [1] "Pcrit =  96.1869525401432"
     ## 
     ## $pcrit_TC2_C1$ModelSummary
     ## 
@@ -1607,7 +1811,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C1
     ## $pcrit_TC3_C1$Pcrit
-    ## [1] "Pcrit =  15.84357326284"
+    ## [1] "Pcrit =  96.0062473677603"
     ## 
     ## $pcrit_TC3_C1$ModelSummary
     ## 
@@ -1633,7 +1837,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC4_C1
     ## $pcrit_TC4_C1$Pcrit
-    ## [1] "Pcrit =  7.33608031164109"
+    ## [1] "Pcrit =  33.6472097680444"
     ## 
     ## $pcrit_TC4_C1$ModelSummary
     ## 
@@ -1659,7 +1863,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC1_C2
     ## $pcrit_TC1_C2$Pcrit
-    ## [1] "Pcrit =  22.1087124553632"
+    ## [1] "Pcrit =  86.0358194290653"
     ## 
     ## $pcrit_TC1_C2$ModelSummary
     ## 
@@ -1685,7 +1889,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C2
     ## $pcrit_TC2_C2$Pcrit
-    ## [1] "Pcrit =  7.76243877479586"
+    ## [1] "Pcrit =  40.988693212037"
     ## 
     ## $pcrit_TC2_C2$ModelSummary
     ## 
@@ -1711,7 +1915,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C2
     ## $pcrit_TC3_C2$Pcrit
-    ## [1] "Pcrit =  13.7911702187696"
+    ## [1] "Pcrit =  56.6221618578978"
     ## 
     ## $pcrit_TC3_C2$ModelSummary
     ## 
@@ -1737,7 +1941,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC4_C2
     ## $pcrit_TC4_C2$Pcrit
-    ## [1] "Pcrit =  15.4021621656069"
+    ## [1] "Pcrit =  100.675382268793"
     ## 
     ## $pcrit_TC4_C2$ModelSummary
     ## 
@@ -1763,7 +1967,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC1_C3
     ## $pcrit_TC1_C3$Pcrit
-    ## [1] "Pcrit =  10.5858745950305"
+    ## [1] "Pcrit =  68.2583001112071"
     ## 
     ## $pcrit_TC1_C3$ModelSummary
     ## 
@@ -1789,7 +1993,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC2_C3
     ## $pcrit_TC2_C3$Pcrit
-    ## [1] "Pcrit =  32.4487751234578"
+    ## [1] "Pcrit =  138.833933352255"
     ## 
     ## $pcrit_TC2_C3$ModelSummary
     ## 
@@ -1815,7 +2019,7 @@ print(pcrit_results)
     ## 
     ## $pcrit_TC3_C3
     ## $pcrit_TC3_C3$Pcrit
-    ## [1] "Pcrit =  5.59727622126018"
+    ## [1] "Pcrit =  38.7134035009303"
     ## 
     ## $pcrit_TC3_C3$ModelSummary
     ## 
@@ -1836,3 +2040,107 @@ print(pcrit_results)
     ## Residual standard error: 0.91 on 4 degrees of freedom
     ## Multiple R-squared:  0.9861, Adjusted R-squared:  0.9826 
     ## F-statistic: 283.2 on 1 and 4 DF,  p-value: 7.307e-05
+    ## 
+    ## 
+    ## 
+    ## $pcrit_TC1_T2
+    ## $pcrit_TC1_T2$Pcrit
+    ## [1] "Pcrit =  38.4516807379294"
+    ## 
+    ## $pcrit_TC1_T2$ModelSummary
+    ## 
+    ## Call:
+    ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
+    ## 
+    ## Residuals:
+    ##      18      19      20      21      22      23 
+    ##  1.1682 -0.8996 -1.1274 -0.1381  0.3374  0.6595 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -22.8688     1.7961  -12.73 0.000219 ***
+    ## avg.po2       7.7111     0.2214   34.83 4.06e-06 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 1.002 on 4 degrees of freedom
+    ## Multiple R-squared:  0.9967, Adjusted R-squared:  0.9959 
+    ## F-statistic:  1213 on 1 and 4 DF,  p-value: 4.057e-06
+    ## 
+    ## 
+    ## 
+    ## $pcrit_TC2_T2
+    ## $pcrit_TC2_T2$Pcrit
+    ## [1] "Pcrit =  51.5385965774598"
+    ## 
+    ## $pcrit_TC2_T2$ModelSummary
+    ## 
+    ## Call:
+    ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
+    ## 
+    ## Residuals:
+    ##       27       28       29       30       31       32 
+    ## -0.09483 -0.04173  0.28661 -0.16634  0.36032 -0.34402 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -12.4184     0.6698  -18.54 4.98e-05 ***
+    ## avg.po2       6.8018     0.1612   42.19 1.89e-06 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.3036 on 4 degrees of freedom
+    ## Multiple R-squared:  0.9978, Adjusted R-squared:  0.9972 
+    ## F-statistic:  1780 on 1 and 4 DF,  p-value: 1.887e-06
+    ## 
+    ## 
+    ## 
+    ## $pcrit_TC3_T2
+    ## $pcrit_TC3_T2$Pcrit
+    ## [1] "Pcrit =  51.6986858699443"
+    ## 
+    ## $pcrit_TC3_T2$ModelSummary
+    ## 
+    ## Call:
+    ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
+    ## 
+    ## Residuals:
+    ##      19      20      21      22      23      24 
+    ## -2.0710  0.1363  1.8792  2.5566  2.5211 -5.0222 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)  -22.925      7.233  -3.170  0.03387 * 
+    ## avg.po2        6.949      1.058   6.567  0.00278 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 3.389 on 4 degrees of freedom
+    ## Multiple R-squared:  0.9151, Adjusted R-squared:  0.8939 
+    ## F-statistic: 43.13 on 1 and 4 DF,  p-value: 0.002782
+    ## 
+    ## 
+    ## 
+    ## $pcrit_TC4_T2
+    ## $pcrit_TC4_T2$Pcrit
+    ## [1] "Pcrit =  67.0054306879903"
+    ## 
+    ## $pcrit_TC4_T2$ModelSummary
+    ## 
+    ## Call:
+    ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
+    ## 
+    ## Residuals:
+    ##      16      17      18      19      20      21 
+    ## -3.4708  3.5721  4.0973 -0.5429 -4.6503  0.9947 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept) -214.968     43.328  -4.961  0.00770 **
+    ## avg.po2        8.538      1.587   5.381  0.00576 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 4.016 on 4 degrees of freedom
+    ## Multiple R-squared:  0.8786, Adjusted R-squared:  0.8483 
+    ## F-statistic: 28.96 on 1 and 4 DF,  p-value: 0.005763
