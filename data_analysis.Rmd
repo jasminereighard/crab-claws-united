@@ -168,10 +168,10 @@ longrespdat$id <- as.factor(longrespdat$fish_id)
 longrespdat$when_arm_lost <- as.factor(longrespdat$when_arm_lost)
 longrespdat$limb_type <- as.factor(longrespdat$limb_type)
 longrespdat$metric <- as.factor(longrespdat$metric)
-longrespdat$mass <- longrespdat$new_mass
+longrespdat$mass <- longrespdat$weight_g #NOT USING NEW MASS, USE ACTUAL WEIGHT
 longrespdat$arm_status <- as.factor(longrespdat$arm_status)
 
-
+longrespdat$mass
 str(longrespdat)
 
 ```
@@ -189,18 +189,20 @@ table(longrespdat$fish_id)
 
 ```{r}
 #linear mixed model mod1
+
+#this model includes the treatmeant and mass and interaction 
 values_mod <- lmer(value ~ metric + metric:treatment + metric:mass + metric:treatment:mass + (1|id), data = longrespdat)
 
-summary(values_mod)
+summary(values_mod) #dont bother trying to decode this just look at the next line of code which is the anova
 
 Anova(values_mod)
 #anova of random effects
 #there is an effect of treatment 
-#no effect of mass across treatment groups
-#there is an effect of mass within groups 
+#no effect of mass within or across treatment groups
 
 
-#just treatment! no mass 
+#USING THIS MODEL !!!! 
+#Model 2 just treatment as a random effect! no mass 
 values_mod2 <- lmer(value ~ metric + metric:treatment + (1|id), data = longrespdat)
 
 summary(values_mod2)
@@ -209,20 +211,23 @@ Anova(values_mod2)
 
 
 
+
+
+
 ```
 
 ```{r}
-#slopes
+#slopes for model 1 to look at mass 
 mass_slopes_mod <- emtrends(values_mod, ~metric:treatment, "mass")
 summary(mass_slopes_mod, infer = TRUE)
-#mass predicts MMR & AS in control fish 
+#mass predicts nothing
 
 
 ```
 
 ```{r}
 #descriptive stats
-#--------Model 1-------------
+#--------Model 1-------------Treatment and mass, though mass did not have an effect 
 longrespdat %>%
   group_by(treatment, metric) %>%
   summarise(mean=mean(value))
@@ -230,20 +235,23 @@ longrespdat %>%
 #pull out mean values
 
 emmeans_mod <- emmeans(values_mod, specs = c("metric", "treatment"))
+
 #model slays
 summary(emmeans_mod)
 
 
 ttest_mod <- emmeans(values_mod, pairwise ~ treatment|metric, adjust = "fdr")
 ttest_mod
+#MHW only had a significant effect on AS
 
 
-#--------Model 2-------------
+#--------Model 2-------------#Model 2 just treatment as a factor! no mass 
 longrespdat %>%
   group_by(treatment, metric) %>%
   summarise(mean=mean(value))
 
 #pull out mean values
+#USE THIS MODEL 
 
 emmeans_mod2 <- emmeans(values_mod2, specs = c("metric", "treatment"))
 #model slays
@@ -252,6 +260,8 @@ summary(emmeans_mod2)
 
 ttest_mod2 <- emmeans(values_mod2, pairwise ~ treatment|metric, adjust = "fdr")
 ttest_mod2
+#When you take out mass, (bc its insignificant), AS and MMR significantly goes down <3 
+
 
 ```
 

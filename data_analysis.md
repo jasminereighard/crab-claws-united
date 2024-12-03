@@ -15,12 +15,12 @@ head(metadata)
 ```
 
     ##       date treatment fish_id weight_g new_mass temp arm_status when_arm_lost
-    ## 1 11/19/24   Control  TC1_C1    11.70 2.557035 25.5          0          good
-    ## 2 11/19/24   Control  TC2_C1    15.02 3.282621 25.5          0          good
-    ## 3 11/19/24   Control  TC3_C1    15.35 3.354742 25.5          1        before
-    ## 4 11/19/24   Control  TC4_C1    11.64 2.543922 25.5          1        during
-    ## 5 11/21/24   Control  TC1_C2     9.62 2.102451 25.5          0          good
-    ## 6 11/21/24   Control  TC2_C2     9.40 2.054370 25.5          1        during
+    ## 1 11/19/24   Control  TC1_C1    11.70 2.557035 25.5       good          good
+    ## 2 11/19/24   Control  TC2_C1    15.02 3.282621 25.5       good          good
+    ## 3 11/19/24   Control  TC3_C1    15.35 3.354742 25.5    missing        before
+    ## 4 11/19/24   Control  TC4_C1    11.64 2.543922 25.5    missing        during
+    ## 5 11/21/24   Control  TC1_C2     9.62 2.102451 25.5       good          good
+    ## 6 11/21/24   Control  TC2_C2     9.40 2.054370 25.5    missing        during
     ##   limb_type
     ## 1      none
     ## 2      none
@@ -34,21 +34,21 @@ print(metadata)
 ```
 
     ##        date treatment fish_id weight_g new_mass temp arm_status when_arm_lost
-    ## 1  11/19/24   Control  TC1_C1    11.70 2.557035 25.5          0          good
-    ## 2  11/19/24   Control  TC2_C1    15.02 3.282621 25.5          0          good
-    ## 3  11/19/24   Control  TC3_C1    15.35 3.354742 25.5          1        before
-    ## 4  11/19/24   Control  TC4_C1    11.64 2.543922 25.5          1        during
-    ## 5  11/21/24   Control  TC1_C2     9.62 2.102451 25.5          0          good
-    ## 6  11/21/24   Control  TC2_C2     9.40 2.054370 25.5          1        during
-    ## 7  11/21/24   Control  TC3_C2     9.34 2.041257 25.5          1        before
-    ## 8  11/21/24   Control  TC4_C2     9.73 2.126492 25.5          1        before
-    ## 9  11/26/24       MHW  TC1_T2    16.34 3.571107 28.5          0          good
-    ## 10 11/26/24       MHW  TC2_T2    17.06 3.728463 28.5          1        before
-    ## 11 11/26/24       MHW  TC3_T2    17.39 3.800584 28.5          1        before
-    ## 12 11/26/24       MHW  TC4_T2    18.52 4.047546 28.5          0          good
-    ## 13 11/17/24   Control  TC1_C3     6.00 1.311300 26.0          0          good
-    ## 14 11/17/24   Control  TC2_C3    13.87 3.031289 26.0          1        during
-    ## 15 11/17/24   Control  TC3_C3     9.82 2.146161 26.0          0          good
+    ## 1  11/19/24   Control  TC1_C1    11.70 2.557035 25.5       good          good
+    ## 2  11/19/24   Control  TC2_C1    15.02 3.282621 25.5       good          good
+    ## 3  11/19/24   Control  TC3_C1    15.35 3.354742 25.5    missing        before
+    ## 4  11/19/24   Control  TC4_C1    11.64 2.543922 25.5    missing        during
+    ## 5  11/21/24   Control  TC1_C2     9.62 2.102451 25.5       good          good
+    ## 6  11/21/24   Control  TC2_C2     9.40 2.054370 25.5    missing        during
+    ## 7  11/21/24   Control  TC3_C2     9.34 2.041257 25.5    missing        before
+    ## 8  11/21/24   Control  TC4_C2     9.73 2.126492 25.5    missing        before
+    ## 9  11/26/24       MHW  TC1_T2    16.34 3.571107 28.5       good          good
+    ## 10 11/26/24       MHW  TC2_T2    17.06 3.728463 28.5    missing        before
+    ## 11 11/26/24       MHW  TC3_T2    17.39 3.800584 28.5    missing        before
+    ## 12 11/26/24       MHW  TC4_T2    18.52 4.047546 28.5       good          good
+    ## 13 11/17/24   Control  TC1_C3     6.00 1.311300 26.0       good          good
+    ## 14 11/17/24   Control  TC2_C3    13.87 3.031289 26.0    missing        during
+    ## 15 11/17/24   Control  TC3_C3     9.82 2.146161 26.0       good          good
     ##    limb_type
     ## 1       none
     ## 2       none
@@ -91,37 +91,37 @@ respdat
 ```
 
     ##        date treatment fish_id weight_g new_mass temp arm_status when_arm_lost
-    ## 1  11/19/24   Control  TC1_C1    11.70 2.557035 25.5          0          good
-    ## 2  11/19/24   Control  TC2_C1    15.02 3.282621 25.5          0          good
-    ## 3  11/19/24   Control  TC3_C1    15.35 3.354742 25.5          1        before
-    ## 4  11/19/24   Control  TC4_C1    11.64 2.543922 25.5          1        during
-    ## 5  11/21/24   Control  TC1_C2     9.62 2.102451 25.5          0          good
-    ## 6  11/21/24   Control  TC2_C2     9.40 2.054370 25.5          1        during
-    ## 7  11/21/24   Control  TC3_C2     9.34 2.041257 25.5          1        before
-    ## 8  11/21/24   Control  TC4_C2     9.73 2.126492 25.5          1        before
-    ## 9  11/26/24       MHW  TC1_T2    16.34 3.571107 28.5          0          good
-    ## 10 11/26/24       MHW  TC2_T2    17.06 3.728463 28.5          1        before
-    ## 11 11/26/24       MHW  TC3_T2    17.39 3.800584 28.5          1        before
-    ## 12 11/26/24       MHW  TC4_T2    18.52 4.047546 28.5          0          good
-    ## 13 11/17/24   Control  TC1_C3     6.00 1.311300 26.0          0          good
-    ## 14 11/17/24   Control  TC2_C3    13.87 3.031289 26.0          1        during
-    ## 15 11/17/24   Control  TC3_C3     9.82 2.146161 26.0          0          good
-    ##    limb_type      MMR      SMR        AS     Pcrit
-    ## 1       none 1427.324 219.2513 1208.0723  45.09828
-    ## 2       none 1564.327 266.0357 1298.2909  96.18695
-    ## 3       both 1493.537 384.4170 1109.1204  96.00625
-    ## 4       claw 1925.103 225.2951 1699.8075  33.64721
-    ## 5       none 1995.983 743.2031 1252.7802  86.03582
-    ## 6       claw 3507.073 272.0468 3235.0262  40.98869
-    ## 7        leg 1862.931 308.3890 1554.5423  56.62216
-    ## 8       claw 1840.884 447.6744 1393.2095 100.67538
-    ## 9       none 1995.983 274.6359 1721.3474  38.45168
-    ## 10       leg 3507.073 338.4395 3168.6335  51.53860
-    ## 11       leg 1862.931 339.7384 1523.1929  51.69869
-    ## 12      none 1840.884 361.1510 1479.7329  67.00543
-    ## 13      none 2434.134 406.6570 2027.4769  68.25830
-    ## 14      claw 1437.630 851.2558  586.3737 138.83393
-    ## 15      none 2338.524 255.3019 2083.2220  38.71340
+    ## 1  11/19/24   Control  TC1_C1    11.70 2.557035 25.5       good          good
+    ## 2  11/19/24   Control  TC2_C1    15.02 3.282621 25.5       good          good
+    ## 3  11/19/24   Control  TC3_C1    15.35 3.354742 25.5    missing        before
+    ## 4  11/19/24   Control  TC4_C1    11.64 2.543922 25.5    missing        during
+    ## 5  11/21/24   Control  TC1_C2     9.62 2.102451 25.5       good          good
+    ## 6  11/21/24   Control  TC2_C2     9.40 2.054370 25.5    missing        during
+    ## 7  11/21/24   Control  TC3_C2     9.34 2.041257 25.5    missing        before
+    ## 8  11/21/24   Control  TC4_C2     9.73 2.126492 25.5    missing        before
+    ## 9  11/26/24       MHW  TC1_T2    16.34 3.571107 28.5       good          good
+    ## 10 11/26/24       MHW  TC2_T2    17.06 3.728463 28.5    missing        before
+    ## 11 11/26/24       MHW  TC3_T2    17.39 3.800584 28.5    missing        before
+    ## 12 11/26/24       MHW  TC4_T2    18.52 4.047546 28.5       good          good
+    ## 13 11/17/24   Control  TC1_C3     6.00 1.311300 26.0       good          good
+    ## 14 11/17/24   Control  TC2_C3    13.87 3.031289 26.0    missing        during
+    ## 15 11/17/24   Control  TC3_C3     9.82 2.146161 26.0       good          good
+    ##    limb_type      MMR       SMR       AS     Pcrit
+    ## 1       none 316.7053  48.64913 268.0561  6.480427
+    ## 2       none 348.6152  59.28690 289.3283 14.191032
+    ## 3       both 332.9836  85.70562 247.2780 15.024477
+    ## 4       claw 427.1228  49.98625 377.1365  8.846849
+    ## 5       none 440.7338 163.97920 276.7546 21.277992
+    ## 6       claw 775.8250  60.17435 715.6507  7.919439
+    ## 7        leg 410.7455  67.54003 343.2055 14.821830
+    ## 8       claw 406.4257  98.40724 308.0184 15.492286
+    ## 9       none 440.7338  60.83094 379.9028 11.241514
+    ## 10       leg 775.8250  75.62005 700.2050 12.425405
+    ## 11       leg 410.7455  75.37746 335.3681 11.271264
+    ## 12      none 406.4257  80.85463 325.5711 31.707309
+    ## 13      none 524.7147  83.62180 441.0929 12.377826
+    ## 14      claw 314.6415 187.46516 127.1763 32.793832
+    ## 15      none 509.9121  52.43102 457.4810  9.746129
 
 ``` r
 longrespdat <- pivot_longer(respdat, cols = c(SMR, MMR, AS, Pcrit), names_to = "metric", values_to = "value")
@@ -135,11 +135,11 @@ str(longrespdat)
     ##  $ weight_g     : num [1:60] 11.7 11.7 11.7 11.7 15 ...
     ##  $ new_mass     : num [1:60] 2.56 2.56 2.56 2.56 3.28 ...
     ##  $ temp         : num [1:60] 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 ...
-    ##  $ arm_status   : int [1:60] 0 0 0 0 0 0 0 0 1 1 ...
+    ##  $ arm_status   : chr [1:60] "good" "good" "good" "good" ...
     ##  $ when_arm_lost: chr [1:60] "good" "good" "good" "good" ...
     ##  $ limb_type    : chr [1:60] "none" "none" "none" "none" ...
     ##  $ metric       : chr [1:60] "SMR" "MMR" "AS" "Pcrit" ...
-    ##  $ value        : num [1:60] 219.3 1427.3 1208.1 45.1 266 ...
+    ##  $ value        : num [1:60] 48.65 316.71 268.06 6.48 59.29 ...
 
 ``` r
 longrespdat$treatment <- as.factor(longrespdat$treatment)
@@ -147,10 +147,19 @@ longrespdat$id <- as.factor(longrespdat$fish_id)
 longrespdat$when_arm_lost <- as.factor(longrespdat$when_arm_lost)
 longrespdat$limb_type <- as.factor(longrespdat$limb_type)
 longrespdat$metric <- as.factor(longrespdat$metric)
-longrespdat$mass <- longrespdat$new_mass
+longrespdat$mass <- longrespdat$weight_g #NOT USING NEW MASS, USE ACTUAL WEIGHT
 longrespdat$arm_status <- as.factor(longrespdat$arm_status)
 
+longrespdat$mass
+```
 
+    ##  [1] 11.70 11.70 11.70 11.70 15.02 15.02 15.02 15.02 15.35 15.35 15.35 15.35
+    ## [13] 11.64 11.64 11.64 11.64  9.62  9.62  9.62  9.62  9.40  9.40  9.40  9.40
+    ## [25]  9.34  9.34  9.34  9.34  9.73  9.73  9.73  9.73 16.34 16.34 16.34 16.34
+    ## [37] 17.06 17.06 17.06 17.06 17.39 17.39 17.39 17.39 18.52 18.52 18.52 18.52
+    ## [49]  6.00  6.00  6.00  6.00 13.87 13.87 13.87 13.87  9.82  9.82  9.82  9.82
+
+``` r
 str(longrespdat)
 ```
 
@@ -161,13 +170,13 @@ str(longrespdat)
     ##  $ weight_g     : num [1:60] 11.7 11.7 11.7 11.7 15 ...
     ##  $ new_mass     : num [1:60] 2.56 2.56 2.56 2.56 3.28 ...
     ##  $ temp         : num [1:60] 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 ...
-    ##  $ arm_status   : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 2 2 ...
+    ##  $ arm_status   : Factor w/ 2 levels "good","missing": 1 1 1 1 1 1 1 1 2 2 ...
     ##  $ when_arm_lost: Factor w/ 3 levels "before","during",..: 3 3 3 3 3 3 3 3 1 1 ...
     ##  $ limb_type    : Factor w/ 4 levels "both","claw",..: 4 4 4 4 4 4 4 4 1 1 ...
     ##  $ metric       : Factor w/ 4 levels "AS","MMR","Pcrit",..: 4 2 1 3 4 2 1 3 4 2 ...
-    ##  $ value        : num [1:60] 219.3 1427.3 1208.1 45.1 266 ...
+    ##  $ value        : num [1:60] 48.65 316.71 268.06 6.48 59.29 ...
     ##  $ id           : Factor w/ 15 levels "TC1_C1","TC1_C2",..: 1 1 1 1 5 5 5 5 9 9 ...
-    ##  $ mass         : num [1:60] 2.56 2.56 2.56 2.56 3.28 ...
+    ##  $ mass         : num [1:60] 11.7 11.7 11.7 11.7 15 ...
 
 ``` r
 #exclude small fish !!!
@@ -186,9 +195,11 @@ table(longrespdat$fish_id)
 
 ``` r
 #linear mixed model mod1
+
+#this model includes the treatmeant and mass and interaction 
 values_mod <- lmer(value ~ metric + metric:treatment + metric:mass + metric:treatment:mass + (1|id), data = longrespdat)
 
-summary(values_mod)
+summary(values_mod) #dont bother trying to decode this just look at the next line of code which is the anova
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
@@ -198,36 +209,53 @@ summary(values_mod)
     ##     (1 | id)
     ##    Data: longrespdat
     ## 
-    ## REML criterion at convergence: 537.5
+    ## REML criterion at convergence: 453.4
     ## 
     ## Scaled residuals: 
     ##      Min       1Q   Median       3Q      Max 
-    ## -1.57739 -0.38081 -0.03338  0.26536  2.48393 
+    ## -1.60978 -0.37859 -0.04491  0.26671  2.49719 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  id       (Intercept)  30742   175.3   
-    ##  Residual             116361   341.1   
+    ##  id       (Intercept) 1471     38.36   
+    ##  Residual             5742     75.78   
     ## Number of obs: 52, groups:  id, 13
     ## 
     ## Fixed effects:
-    ##                               Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)                    2493.56     676.63    31.83   3.685 0.000845 ***
-    ## metricMMR                       370.55     851.05    27.00   0.435 0.666731    
-    ## metricPcrit                   -2499.33     851.05    27.00  -2.937 0.006706 ** 
-    ## metricSMR                     -2123.00     851.05    27.00  -2.495 0.019029 *  
-    ## metricAS:treatmentMHW          4298.51    4284.44    31.83   1.003 0.323291    
-    ## metricMMR:treatmentMHW         3624.57    4284.44    31.83   0.846 0.403877    
-    ## metricPcrit:treatmentMHW       -161.93    4284.44    31.83  -0.038 0.970086    
-    ## metricSMR:treatmentMHW         -673.94    4284.44    31.83  -0.157 0.876003    
-    ## metricAS:mass                  -442.36     257.91    31.83  -1.715 0.096037 .  
-    ## metricMMR:mass                 -426.58     257.91    31.83  -1.654 0.107962    
-    ## metricPcrit:mass                 32.08     257.91    31.83   0.124 0.901799    
-    ## metricSMR:mass                   15.78     257.91    31.83   0.061 0.951596    
-    ## metricAS:treatmentMHW:mass     -830.13    1145.44    31.83  -0.725 0.473916    
-    ## metricMMR:treatmentMHW:mass    -679.05    1145.44    31.83  -0.593 0.557485    
-    ## metricPcrit:treatmentMHW:mass    25.98    1145.44    31.83   0.023 0.982043    
-    ## metricSMR:treatmentMHW:mass     151.08    1145.44    31.83   0.132 0.895898    
+    ##                                Estimate Std. Error        df t value Pr(>|t|)
+    ## (Intercept)                    546.9813   149.8318   32.0051   3.651 0.000924
+    ## metricMMR                       77.8695   189.0523   27.0000   0.412 0.683669
+    ## metricPcrit                   -539.8048   189.0523   27.0000  -2.855 0.008166
+    ## metricSMR                     -469.1118   189.0523   27.0000  -2.481 0.019608
+    ## metricAS:treatmentMHW          962.2284   948.7440   32.0051   1.014 0.318087
+    ## metricMMR:treatmentMHW         811.5523   948.7440   32.0051   0.855 0.398690
+    ## metricPcrit:treatmentMHW      -159.3324   948.7440   32.0051  -0.168 0.867687
+    ## metricSMR:treatmentMHW        -150.6761   948.7440   32.0051  -0.159 0.874811
+    ## metricAS:mass                  -21.0048    12.4818   32.0051  -1.683 0.102140
+    ## metricMMR:mass                 -19.9432    12.4818   32.0051  -1.598 0.119920
+    ## metricPcrit:mass                 0.6983    12.4818   32.0051   0.056 0.955731
+    ## metricSMR:mass                   1.0616    12.4818   32.0051   0.085 0.932750
+    ## metricAS:treatmentMHW:mass     -40.9746    55.4345   32.0051  -0.739 0.465200
+    ## metricMMR:treatmentMHW:mass    -33.6116    55.4345   32.0051  -0.606 0.548572
+    ## metricPcrit:treatmentMHW:mass    9.0444    55.4345   32.0051   0.163 0.871422
+    ## metricSMR:treatmentMHW:mass      7.3630    55.4345   32.0051   0.133 0.895164
+    ##                                  
+    ## (Intercept)                   ***
+    ## metricMMR                        
+    ## metricPcrit                   ** 
+    ## metricSMR                     *  
+    ## metricAS:treatmentMHW            
+    ## metricMMR:treatmentMHW           
+    ## metricPcrit:treatmentMHW         
+    ## metricSMR:treatmentMHW           
+    ## metricAS:mass                    
+    ## metricMMR:mass                   
+    ## metricPcrit:mass                 
+    ## metricSMR:mass                   
+    ## metricAS:treatmentMHW:mass       
+    ## metricMMR:treatmentMHW:mass      
+    ## metricPcrit:treatmentMHW:mass    
+    ## metricSMR:treatmentMHW:mass      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -244,21 +272,21 @@ Anova(values_mod)
     ## 
     ## Response: value
     ##                          Chisq Df Pr(>Chisq)    
-    ## metric                268.5937  3  < 2.2e-16 ***
-    ## metric:treatment       18.1309  4   0.001163 ** 
-    ## metric:mass             6.9560  4   0.138230    
-    ## metric:treatment:mass   0.9113  4   0.922935    
+    ## metric                265.1332  3  < 2.2e-16 ***
+    ## metric:treatment       17.4017  4   0.001615 ** 
+    ## metric:mass             6.6262  4   0.157010    
+    ## metric:treatment:mass   1.0287  4   0.905414    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 #anova of random effects
 #there is an effect of treatment 
-#no effect of mass across treatment groups
-#there is an effect of mass within groups 
+#no effect of mass within or across treatment groups
 
 
-#just treatment! no mass 
+#USING THIS MODEL !!!! 
+#Model 2 just treatment as a random effect! no mass 
 values_mod2 <- lmer(value ~ metric + metric:treatment + (1|id), data = longrespdat)
 
 summary(values_mod2)
@@ -269,40 +297,40 @@ summary(values_mod2)
     ## Formula: value ~ metric + metric:treatment + (1 | id)
     ##    Data: longrespdat
     ## 
-    ## REML criterion at convergence: 660.2
+    ## REML criterion at convergence: 527.5
     ## 
     ## Scaled residuals: 
-    ##     Min      1Q  Median      3Q     Max 
-    ## -2.0308 -0.5538 -0.0070  0.3660  2.6197 
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.05941 -0.51303 -0.02349  0.37336  2.64551 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  id       (Intercept)  31677   178.0   
-    ##  Residual             115437   339.8   
+    ##  id       (Intercept) 1496     38.68   
+    ##  Residual             5676     75.34   
     ## Number of obs: 52, groups:  id, 13
     ## 
     ## Fixed effects:
     ##                          Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)               1353.94     127.85    38.63  10.590 5.54e-13 ***
-    ## metricMMR                  411.20     160.16    33.00   2.567   0.0150 *  
-    ## metricPcrit              -1277.07     160.16    33.00  -7.973 3.38e-09 ***
-    ## metricSMR                 -942.73     160.16    33.00  -5.886 1.35e-06 ***
-    ## metricAS:treatmentMHW      619.29     230.49    38.63   2.687   0.0106 *  
-    ## metricMMR:treatmentMHW     536.58     230.49    38.63   2.328   0.0252 *  
-    ## metricPcrit:treatmentMHW   -24.70     230.49    38.63  -0.107   0.9152    
-    ## metricSMR:treatmentMHW     -82.71     230.49    38.63  -0.359   0.7217    
+    ## (Intercept)               299.382     28.230   38.918  10.605 4.85e-13 ***
+    ## metricMMR                  90.383     35.516   33.000   2.545   0.0158 *  
+    ## metricPcrit              -283.973     35.516   33.000  -7.996 3.18e-09 ***
+    ## metricSMR                -208.998     35.516   33.000  -5.885 1.35e-06 ***
+    ## metricAS:treatmentMHW     135.880     50.893   38.918   2.670   0.0110 *  
+    ## metricMMR:treatmentMHW    118.667     50.893   38.918   2.332   0.0250 *  
+    ## metricPcrit:treatmentMHW    1.253     50.893   38.918   0.025   0.9805    
+    ## metricSMR:treatmentMHW    -17.213     50.893   38.918  -0.338   0.7370    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## Correlation of Fixed Effects:
     ##             (Intr) mtrMMR mtrcPc mtrSMR mAS:MH mMMR:M mP:MHW
-    ## metricMMR   -0.626                                          
-    ## metricPcrit -0.626  0.500                                   
-    ## metricSMR   -0.626  0.500  0.500                            
-    ## mtrcAS:tMHW -0.555  0.347  0.347  0.347                     
-    ## mtrcMMR:MHW -0.119 -0.347  0.000  0.000  0.215              
-    ## mtrcPcr:MHW -0.119  0.000 -0.347  0.000  0.215  0.215       
-    ## mtrcSMR:MHW -0.119  0.000  0.000 -0.347  0.215  0.215  0.215
+    ## metricMMR   -0.629                                          
+    ## metricPcrit -0.629  0.500                                   
+    ## metricSMR   -0.629  0.500  0.500                            
+    ## mtrcAS:tMHW -0.555  0.349  0.349  0.349                     
+    ## mtrcMMR:MHW -0.116 -0.349  0.000  0.000  0.209              
+    ## mtrcPcr:MHW -0.116  0.000 -0.349  0.000  0.209  0.209       
+    ## mtrcSMR:MHW -0.116  0.000  0.000 -0.349  0.209  0.209  0.209
 
 ``` r
 Anova(values_mod2)
@@ -311,14 +339,14 @@ Anova(values_mod2)
     ## Analysis of Deviance Table (Type II Wald chisquare tests)
     ## 
     ## Response: value
-    ##                    Chisq Df Pr(>Chisq)    
-    ## metric           270.744  3     <2e-16 ***
-    ## metric:treatment  12.836  4     0.0121 *  
+    ##                   Chisq Df Pr(>Chisq)    
+    ## metric           268.20  3    < 2e-16 ***
+    ## metric:treatment  12.46  4    0.01424 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-#slopes
+#slopes for model 1 to look at mass 
 mass_slopes_mod <- emtrends(values_mod, ~metric:treatment, "mass")
 ```
 
@@ -329,26 +357,26 @@ mass_slopes_mod <- emtrends(values_mod, ~metric:treatment, "mass")
 summary(mass_slopes_mod, infer = TRUE)
 ```
 
-    ##  treatment metric mass.trend   SE   df lower.CL upper.CL t.ratio p.value
-    ##  Control   AS         -442.4  258 31.8     -968     83.1  -1.715  0.0960
-    ##  MHW       AS        -1272.5 1116 31.8    -3546   1001.3  -1.140  0.2627
-    ##  Control   MMR        -426.6  258 31.8     -952     98.9  -1.654  0.1080
-    ##  MHW       MMR       -1105.6 1116 31.8    -3379   1168.1  -0.991  0.3293
-    ##  Control   Pcrit        32.1  258 31.8     -493    557.5   0.124  0.9018
-    ##  MHW       Pcrit        58.1 1116 31.8    -2216   2331.8   0.052  0.9588
-    ##  Control   SMR          15.8  258 31.8     -510    541.2   0.061  0.9516
-    ##  MHW       SMR         166.9 1116 31.8    -2107   2440.6   0.150  0.8821
+    ##  treatment metric mass.trend   SE df lower.CL upper.CL t.ratio p.value
+    ##  Control   AS        -21.005 12.5 32    -46.4     4.42  -1.683  0.1021
+    ##  MHW       AS        -61.979 54.0 32   -172.0    48.04  -1.148  0.2597
+    ##  Control   MMR       -19.943 12.5 32    -45.4     5.48  -1.598  0.1199
+    ##  MHW       MMR       -53.555 54.0 32   -163.6    56.46  -0.992  0.3289
+    ##  Control   Pcrit       0.698 12.5 32    -24.7    26.12   0.056  0.9557
+    ##  MHW       Pcrit       9.743 54.0 32   -100.3   119.76   0.180  0.8580
+    ##  Control   SMR         1.062 12.5 32    -24.4    26.49   0.085  0.9327
+    ##  MHW       SMR         8.425 54.0 32   -101.6   118.44   0.156  0.8770
     ## 
     ## Degrees-of-freedom method: kenward-roger 
     ## Confidence level used: 0.95
 
 ``` r
-#mass predicts MMR & AS in control fish 
+#mass predicts nothing
 ```
 
 ``` r
 #descriptive stats
-#--------Model 1-------------
+#--------Model 1-------------Treatment and mass, though mass did not have an effect 
 longrespdat %>%
   group_by(treatment, metric) %>%
   summarise(mean=mean(value))
@@ -359,16 +387,16 @@ longrespdat %>%
 
     ## # A tibble: 8 × 3
     ## # Groups:   treatment [2]
-    ##   treatment metric   mean
-    ##   <fct>     <fct>   <dbl>
-    ## 1 Control   AS     1354. 
-    ## 2 Control   MMR    1765. 
-    ## 3 Control   Pcrit    76.9
-    ## 4 Control   SMR     411. 
-    ## 5 MHW       AS     1973. 
-    ## 6 MHW       MMR    2302. 
-    ## 7 MHW       Pcrit    52.2
-    ## 8 MHW       SMR     328.
+    ##   treatment metric  mean
+    ##   <fct>     <fct>  <dbl>
+    ## 1 Control   AS     299. 
+    ## 2 Control   MMR    390. 
+    ## 3 Control   Pcrit   15.4
+    ## 4 Control   SMR     90.4
+    ## 5 MHW       AS     435. 
+    ## 6 MHW       MMR    508. 
+    ## 7 MHW       Pcrit   16.7
+    ## 8 MHW       SMR     73.2
 
 ``` r
 #pull out mean values
@@ -385,15 +413,15 @@ emmeans_mod <- emmeans(values_mod, specs = c("metric", "treatment"))
 summary(emmeans_mod)
 ```
 
-    ##  treatment metric  emmean  SE   df lower.CL upper.CL
-    ##  Control   AS     1189.14 160 31.8    863.3     1515
-    ##  MHW       AS     3039.81 955 31.8   1094.3     4985
-    ##  Control   MMR    1606.23 160 31.8   1280.4     1932
-    ##  MHW       MMR    3228.44 955 31.8   1283.0     5174
-    ##  Control   Pcrit    88.82 160 31.8   -237.0      415
-    ##  MHW       Pcrit     3.51 955 31.8  -1942.0     1949
-    ##  Control   SMR     417.08 160 31.8     91.3      743
-    ##  MHW       SMR     188.63 955 31.8  -1756.8     2134
+    ##  treatment metric emmean    SE df lower.CL upper.CL
+    ##  Control   AS      263.6  35.4 32    191.4    335.7
+    ##  MHW       AS      673.0 211.5 32    242.3   1103.7
+    ##  Control   MMR     355.8  35.4 32    283.6    427.9
+    ##  MHW       MMR     713.8 211.5 32    283.1   1144.5
+    ##  Control   Pcrit    16.6  35.4 32    -55.5     88.7
+    ##  MHW       Pcrit   -20.7 211.5 32   -451.4    410.0
+    ##  Control   SMR      92.2  35.4 32     20.1    164.3
+    ##  MHW       SMR      40.9 211.5 32   -389.8    471.6
     ## 
     ## Degrees-of-freedom method: kenward-roger 
     ## Confidence level used: 0.95
@@ -412,49 +440,52 @@ ttest_mod
 
     ## $emmeans
     ## metric = AS:
-    ##  treatment  emmean  SE   df lower.CL upper.CL
-    ##  Control   1189.14 160 31.8    863.3     1515
-    ##  MHW       3039.81 955 31.8   1094.3     4985
+    ##  treatment emmean    SE df lower.CL upper.CL
+    ##  Control    263.6  35.4 32    191.4    335.7
+    ##  MHW        673.0 211.5 32    242.3   1103.7
     ## 
     ## metric = MMR:
-    ##  treatment  emmean  SE   df lower.CL upper.CL
-    ##  Control   1606.23 160 31.8   1280.4     1932
-    ##  MHW       3228.44 955 31.8   1283.0     5174
+    ##  treatment emmean    SE df lower.CL upper.CL
+    ##  Control    355.8  35.4 32    283.6    427.9
+    ##  MHW        713.8 211.5 32    283.1   1144.5
     ## 
     ## metric = Pcrit:
-    ##  treatment  emmean  SE   df lower.CL upper.CL
-    ##  Control     88.82 160 31.8   -237.0      415
-    ##  MHW          3.51 955 31.8  -1942.0     1949
+    ##  treatment emmean    SE df lower.CL upper.CL
+    ##  Control     16.6  35.4 32    -55.5     88.7
+    ##  MHW        -20.7 211.5 32   -451.4    410.0
     ## 
     ## metric = SMR:
-    ##  treatment  emmean  SE   df lower.CL upper.CL
-    ##  Control    417.08 160 31.8     91.3      743
-    ##  MHW        188.63 955 31.8  -1756.8     2134
+    ##  treatment emmean    SE df lower.CL upper.CL
+    ##  Control     92.2  35.4 32     20.1    164.3
+    ##  MHW         40.9 211.5 32   -389.8    471.6
     ## 
     ## Degrees-of-freedom method: kenward-roger 
     ## Confidence level used: 0.95 
     ## 
     ## $contrasts
     ## metric = AS:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW  -1850.7 968 31.8  -1.911  0.0650
+    ##  contrast      estimate  SE df t.ratio p.value
+    ##  Control - MHW   -409.4 214 32  -1.909  0.0652
     ## 
     ## metric = MMR:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW  -1622.2 968 31.8  -1.676  0.1036
+    ##  contrast      estimate  SE df t.ratio p.value
+    ##  Control - MHW   -358.1 214 32  -1.670  0.1047
     ## 
     ## metric = Pcrit:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW     85.3 968 31.8   0.088  0.9303
+    ##  contrast      estimate  SE df t.ratio p.value
+    ##  Control - MHW     37.3 214 32   0.174  0.8630
     ## 
     ## metric = SMR:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW    228.4 968 31.8   0.236  0.8150
+    ##  contrast      estimate  SE df t.ratio p.value
+    ##  Control - MHW     51.3 214 32   0.239  0.8123
     ## 
     ## Degrees-of-freedom method: kenward-roger
 
 ``` r
-#--------Model 2-------------
+#MHW only had a significant effect on AS
+
+
+#--------Model 2-------------#Model 2 just treatment as a factor! no mass 
 longrespdat %>%
   group_by(treatment, metric) %>%
   summarise(mean=mean(value))
@@ -465,19 +496,20 @@ longrespdat %>%
 
     ## # A tibble: 8 × 3
     ## # Groups:   treatment [2]
-    ##   treatment metric   mean
-    ##   <fct>     <fct>   <dbl>
-    ## 1 Control   AS     1354. 
-    ## 2 Control   MMR    1765. 
-    ## 3 Control   Pcrit    76.9
-    ## 4 Control   SMR     411. 
-    ## 5 MHW       AS     1973. 
-    ## 6 MHW       MMR    2302. 
-    ## 7 MHW       Pcrit    52.2
-    ## 8 MHW       SMR     328.
+    ##   treatment metric  mean
+    ##   <fct>     <fct>  <dbl>
+    ## 1 Control   AS     299. 
+    ## 2 Control   MMR    390. 
+    ## 3 Control   Pcrit   15.4
+    ## 4 Control   SMR     90.4
+    ## 5 MHW       AS     435. 
+    ## 6 MHW       MMR    508. 
+    ## 7 MHW       Pcrit   16.7
+    ## 8 MHW       SMR     73.2
 
 ``` r
 #pull out mean values
+#USE THIS MODEL 
 
 emmeans_mod2 <- emmeans(values_mod2, specs = c("metric", "treatment"))
 ```
@@ -490,15 +522,15 @@ emmeans_mod2 <- emmeans(values_mod2, specs = c("metric", "treatment"))
 summary(emmeans_mod2)
 ```
 
-    ##  treatment metric emmean  SE   df lower.CL upper.CL
-    ##  Control   AS     1353.9 128 38.6   1095.3     1613
-    ##  MHW       AS     1973.2 192 38.6   1585.2     2361
-    ##  Control   MMR    1765.1 128 38.6   1506.5     2024
-    ##  MHW       MMR    2301.7 192 38.6   1913.7     2690
-    ##  Control   Pcrit    76.9 128 38.6   -181.8      336
-    ##  MHW       Pcrit    52.2 192 38.6   -335.9      440
-    ##  Control   SMR     411.2 128 38.6    152.5      670
-    ##  MHW       SMR     328.5 192 38.6    -59.5      717
+    ##  treatment metric emmean   SE   df lower.CL upper.CL
+    ##  Control   AS      299.4 28.2 38.9    242.3    356.5
+    ##  MHW       AS      435.3 42.3 38.9    349.6    520.9
+    ##  Control   MMR     389.8 28.2 38.9    332.7    446.9
+    ##  MHW       MMR     508.4 42.3 38.9    422.8    594.1
+    ##  Control   Pcrit    15.4 28.2 38.9    -41.7     72.5
+    ##  MHW       Pcrit    16.7 42.3 38.9    -69.0    102.3
+    ##  Control   SMR      90.4 28.2 38.9     33.3    147.5
+    ##  MHW       SMR      73.2 42.3 38.9    -12.5    158.8
     ## 
     ## Degrees-of-freedom method: kenward-roger 
     ## Confidence level used: 0.95
@@ -516,46 +548,50 @@ ttest_mod2
 
     ## $emmeans
     ## metric = AS:
-    ##  treatment emmean  SE   df lower.CL upper.CL
-    ##  Control   1353.9 128 38.6   1095.3     1613
-    ##  MHW       1973.2 192 38.6   1585.2     2361
+    ##  treatment emmean   SE   df lower.CL upper.CL
+    ##  Control    299.4 28.2 38.9    242.3    356.5
+    ##  MHW        435.3 42.3 38.9    349.6    520.9
     ## 
     ## metric = MMR:
-    ##  treatment emmean  SE   df lower.CL upper.CL
-    ##  Control   1765.1 128 38.6   1506.5     2024
-    ##  MHW       2301.7 192 38.6   1913.7     2690
+    ##  treatment emmean   SE   df lower.CL upper.CL
+    ##  Control    389.8 28.2 38.9    332.7    446.9
+    ##  MHW        508.4 42.3 38.9    422.8    594.1
     ## 
     ## metric = Pcrit:
-    ##  treatment emmean  SE   df lower.CL upper.CL
-    ##  Control     76.9 128 38.6   -181.8      336
-    ##  MHW         52.2 192 38.6   -335.9      440
+    ##  treatment emmean   SE   df lower.CL upper.CL
+    ##  Control     15.4 28.2 38.9    -41.7     72.5
+    ##  MHW         16.7 42.3 38.9    -69.0    102.3
     ## 
     ## metric = SMR:
-    ##  treatment emmean  SE   df lower.CL upper.CL
-    ##  Control    411.2 128 38.6    152.5      670
-    ##  MHW        328.5 192 38.6    -59.5      717
+    ##  treatment emmean   SE   df lower.CL upper.CL
+    ##  Control     90.4 28.2 38.9     33.3    147.5
+    ##  MHW         73.2 42.3 38.9    -12.5    158.8
     ## 
     ## Degrees-of-freedom method: kenward-roger 
     ## Confidence level used: 0.95 
     ## 
     ## $contrasts
     ## metric = AS:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW   -619.3 230 38.6  -2.687  0.0106
+    ##  contrast      estimate   SE   df t.ratio p.value
+    ##  Control - MHW  -135.88 50.9 38.9  -2.670  0.0110
     ## 
     ## metric = MMR:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW   -536.6 230 38.6  -2.328  0.0252
+    ##  contrast      estimate   SE   df t.ratio p.value
+    ##  Control - MHW  -118.67 50.9 38.9  -2.332  0.0250
     ## 
     ## metric = Pcrit:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW     24.7 230 38.6   0.107  0.9152
+    ##  contrast      estimate   SE   df t.ratio p.value
+    ##  Control - MHW    -1.25 50.9 38.9  -0.025  0.9805
     ## 
     ## metric = SMR:
-    ##  contrast      estimate  SE   df t.ratio p.value
-    ##  Control - MHW     82.7 230 38.6   0.359  0.7217
+    ##  contrast      estimate   SE   df t.ratio p.value
+    ##  Control - MHW    17.21 50.9 38.9   0.338  0.7370
     ## 
     ## Degrees-of-freedom method: kenward-roger
+
+``` r
+#When you take out mass, (bc its insignificant), AS and MMR significantly goes down <3 
+```
 
 ## R Markdown
 
