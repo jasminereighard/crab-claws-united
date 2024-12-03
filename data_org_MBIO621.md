@@ -882,7 +882,7 @@ str(meta_data)
     ##  $ weight_g     : num  11.7 15.02 15.35 11.64 9.62 ...
     ##  $ new_mass     : num  2.56 3.28 3.35 2.54 2.1 ...
     ##  $ temp         : num  25.5 25.5 25.5 25.5 25.5 25.5 25.5 25.5 28.5 28.5 ...
-    ##  $ arm_status   : int  0 0 1 1 0 1 1 1 0 1 ...
+    ##  $ arm_status   : chr  "good" "good" "missing" "missing" ...
     ##  $ when_arm_lost: chr  "good" "good" "before" "during" ...
     ##  $ limb_type    : chr  "none" "none" "both" "claw" ...
 
@@ -961,57 +961,6 @@ list2env(preback_list, envir = .GlobalEnv)
 #list2env: This function takes the elements of a list and assigns them to the global environment (or any specified environment) as individual variables.
 #preback_list: This is the list containing the results of the adjust_MO2 function applied to each dataset.
 #.GlobalEnv: This is the global environment in R, where most user-created variables and functions are stored and accessed.
-```
-
-``` r
-# List of dataframes to update (replace with your actual list of dataframe names)
-dataframe_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
-               "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
-               "TC1_C3", "TC2_C3", "TC3_C3",
-               "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2",
-               "pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
-               "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
-               "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3",
-               "pcrit_TC1_T2", "pcrit_TC2_T2", "pcrit_TC3_T2", "pcrit_TC4_T2",
-               "preback_TC1_C1", "preback_TC2_C1", "preback_TC3_C1", "preback_TC4_C1",
-               "preback_TC1_C2", "preback_TC2_C2", "preback_TC3_C2", "preback_TC4_C2",
-               "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3",
-               "preback_TC1_T2", "preback_TC2_T2", "preback_TC3_T2", "preback_TC4_T2",
-               "postback_TC1_C1", "postback_TC2_C1", "postback_TC3_C1", "postback_TC4_C1",
-               "postback_TC1_C2", "postback_TC2_C2", "postback_TC3_C2", "postback_TC4_C2",
-               "postback_TC1_C3", "postback_TC2_C3", "postback_TC3_C3",
-               "postback_TC1_T2", "postback_TC2_T2", "postback_TC3_T2", "postback_TC4_T2")
-
-update_mo2 <- function(dataframe_names, meta_data) {
-  for (df_name in dataframe_names) {
-    # Extract the dataframe
-    df <- get(df_name, envir = .GlobalEnv)
-    
-    # Dynamically extract fish_id by removing prefixes like "pcrit_", "preback_", "postback_"
-    fish_id <- sub("^(pcrit_|preback_|postback_)?", "", df_name)
-    
-    # Get the corresponding new_mass value from meta_data
-    weight_g <- meta_data$weight_g[meta_data$fish_id == fish_id]
-    new_mass <- meta_data$new_mass[meta_data$fish_id == fish_id]
-    
-    
-    if (length(new_mass) == 1 && !is.na(new_mass)) {
-      # Calculate true_Vre
-      true_Vre <- (0.170 * 1000) - new_mass
-      
-      # Update the MO2 column
-      df$MO2 <- ((df$MO2 / (0.170 * 1000)) * weight_g) * true_Vre / new_mass
-      
-      # Save the updated dataframe back to its original name
-      assign(df_name, df, envir = .GlobalEnv)
-    } else {
-      message("No matching new_mass found for ", fish_id)
-    }
-  }
-}
-
-
-update_mo2(dataframe_names, meta_data)
 ```
 
 ``` r
@@ -1359,7 +1308,7 @@ for (fish_id in names(smr_dataframes)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-27-15.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-26-15.png)<!-- -->
 
 ``` r
 # Function to calculate the mean distances of all corr_MO2 values +2 above double normal & -2 below q20
@@ -1402,37 +1351,37 @@ print(distance_summaries_df)
 ```
 
     ##      Fish mean_dist_Double_Normal mean_dist_Q10 mean_dist_Q15 mean_dist_Q20
-    ## 1  TC1_C1                19.44591      17.40032      11.13841      9.237152
-    ## 2  TC2_C1                31.20264      25.62671      22.38709     19.347513
-    ## 3  TC3_C1                41.22373      41.44227      32.89610     28.279253
-    ## 4  TC4_C1                56.76418      36.84690      31.72707     26.653854
-    ## 5  TC1_C2                36.74942      38.11601      22.64968     17.129939
-    ## 6  TC2_C2                63.77501      50.61748      43.19005     36.272509
-    ## 7  TC3_C2                43.89036      43.62855      24.55758     23.521275
-    ## 8  TC4_C2                29.07442      25.95053      17.90622     15.725856
-    ## 9  TC1_C3                45.15712      43.25451      27.11181     21.362384
-    ## 10 TC2_C3                15.24326      18.59451      10.09860      8.271268
-    ## 11 TC3_C3                55.69516      39.39274      19.31823     19.244758
-    ## 12 TC1_T2                60.94916      33.12574      26.97784     23.146441
-    ## 13 TC2_T2                67.40468      43.00170      34.57293     30.132145
-    ## 14 TC3_T2                17.82505      13.69540      26.28387     36.134299
-    ## 15 TC4_T2                31.75638      29.78109      20.39433     20.220755
+    ## 1  TC1_C1                4.529049      4.191540      3.158367      2.844673
+    ## 2  TC2_C1                6.770881      6.189918      5.534782      4.910633
+    ## 3  TC3_C1                8.611128     10.016409      8.078622      7.000132
+    ## 4  TC4_C1               12.451499      8.568143      7.572445      6.585812
+    ## 5  TC1_C2                7.897140      9.447944      6.106945      4.808054
+    ## 6  TC2_C2               14.779309     10.748374      9.372506      8.137186
+    ## 7  TC3_C2                9.473606     10.181197      5.947133      5.611918
+    ## 8  TC4_C2                6.027420      5.729135      4.101927      3.683391
+    ## 9  TC1_C3                9.268007      9.234429      6.240590      5.475310
+    ## 10 TC2_C3                3.779630      4.434445      2.910698      2.452212
+    ## 11 TC3_C3               11.310392      8.587945      5.108943      5.110655
+    ## 12 TC1_T2               13.540241      7.772975      6.558167      5.849253
+    ## 13 TC2_T2               14.828815      9.999318      8.172031      7.197264
+    ## 14 TC3_T2                4.998489      3.083828      6.413675      8.534480
+    ## 15 TC4_T2                8.283455      6.087225      4.934231      5.720619
     ##    mean_dist_Q25
-    ## 1       11.73784
-    ## 2       18.02865
-    ## 3       22.89736
-    ## 4       22.32751
-    ## 5       17.76750
-    ## 6       31.52773
-    ## 7       33.10752
-    ## 8       20.43182
-    ## 9       24.00488
-    ## 10      11.61282
-    ## 11      45.19135
-    ## 12      21.80417
-    ## 13      28.05893
-    ## 14      93.80060
-    ## 15      28.34567
+    ## 1       3.257269
+    ## 2       4.623395
+    ## 3       5.637298
+    ## 4       5.744429
+    ## 5       4.667673
+    ## 6       7.331869
+    ## 7       7.529944
+    ## 8       4.534860
+    ## 9       5.713178
+    ## 10      2.889796
+    ## 11     10.379691
+    ## 12      5.576126
+    ## 13      6.717385
+    ## 14     21.785336
+    ## 15      7.601142
 
 ``` r
 #Now weʻre going to extract our values for data analyses! 
@@ -1464,49 +1413,49 @@ print(all_q20)
 ```
 
     ## $TC1_C1
-    ## [1] 219.2513
+    ## [1] 48.64913
     ## 
     ## $TC2_C1
-    ## [1] 266.0357
+    ## [1] 59.2869
     ## 
     ## $TC3_C1
-    ## [1] 384.417
+    ## [1] 85.70562
     ## 
     ## $TC4_C1
-    ## [1] 225.2951
+    ## [1] 49.98625
     ## 
     ## $TC1_C2
-    ## [1] 743.2031
+    ## [1] 163.9792
     ## 
     ## $TC2_C2
-    ## [1] 272.0468
+    ## [1] 60.17435
     ## 
     ## $TC3_C2
-    ## [1] 308.389
+    ## [1] 67.54003
     ## 
     ## $TC4_C2
-    ## [1] 447.6744
+    ## [1] 98.40724
     ## 
     ## $TC1_C3
-    ## [1] 406.657
+    ## [1] 83.6218
     ## 
     ## $TC2_C3
-    ## [1] 851.2558
+    ## [1] 187.4652
     ## 
     ## $TC3_C3
-    ## [1] 255.3019
+    ## [1] 52.43102
     ## 
     ## $TC1_T2
-    ## [1] 274.6359
+    ## [1] 60.83094
     ## 
     ## $TC2_T2
-    ## [1] 338.4395
+    ## [1] 75.62005
     ## 
     ## $TC3_T2
-    ## [1] 339.7384
+    ## [1] 75.37746
     ## 
     ## $TC4_T2
-    ## [1] 361.151
+    ## [1] 80.85463
 
 ``` r
 #Example code for when adding other treatment groups 
@@ -1543,49 +1492,49 @@ print(all_MMR)
 ```
 
     ## $TC1_C1
-    ## [1] 1427.324
+    ## [1] 316.7053
     ## 
     ## $TC2_C1
-    ## [1] 1564.327
+    ## [1] 348.6152
     ## 
     ## $TC3_C1
-    ## [1] 1493.537
+    ## [1] 332.9836
     ## 
     ## $TC4_C1
-    ## [1] 1925.103
+    ## [1] 427.1228
     ## 
     ## $TC1_C2
-    ## [1] 1995.983
+    ## [1] 440.7338
     ## 
     ## $TC2_C2
-    ## [1] 3507.073
+    ## [1] 775.825
     ## 
     ## $TC3_C2
-    ## [1] 1862.931
+    ## [1] 410.7455
     ## 
     ## $TC4_C2
-    ## [1] 1840.884
+    ## [1] 406.4257
     ## 
     ## $TC1_C3
-    ## [1] 2434.134
+    ## [1] 524.7147
     ## 
     ## $TC2_C3
-    ## [1] 1437.63
+    ## [1] 314.6415
     ## 
     ## $TC3_C3
-    ## [1] 2338.524
+    ## [1] 509.9121
     ## 
     ## $TC1_T2
-    ## [1] 1995.983
+    ## [1] 440.7338
     ## 
     ## $TC2_T2
-    ## [1] 3507.073
+    ## [1] 775.825
     ## 
     ## $TC3_T2
-    ## [1] 1862.931
+    ## [1] 410.7455
     ## 
     ## $TC4_T2
-    ## [1] 1840.884
+    ## [1] 406.4257
 
 ``` r
 # Define Function to Calculate Aerobic Scope
@@ -1600,49 +1549,49 @@ print(aerobic_scope_values)
 ```
 
     ## $TC1_C1
-    ## [1] 1208.072
+    ## [1] 268.0561
     ## 
     ## $TC2_C1
-    ## [1] 1298.291
+    ## [1] 289.3283
     ## 
     ## $TC3_C1
-    ## [1] 1109.12
+    ## [1] 247.278
     ## 
     ## $TC4_C1
-    ## [1] 1699.808
+    ## [1] 377.1365
     ## 
     ## $TC1_C2
-    ## [1] 1252.78
+    ## [1] 276.7546
     ## 
     ## $TC2_C2
-    ## [1] 3235.026
+    ## [1] 715.6507
     ## 
     ## $TC3_C2
-    ## [1] 1554.542
+    ## [1] 343.2055
     ## 
     ## $TC4_C2
-    ## [1] 1393.21
+    ## [1] 308.0184
     ## 
     ## $TC1_C3
-    ## [1] 2027.477
+    ## [1] 441.0929
     ## 
     ## $TC2_C3
-    ## [1] 586.3737
+    ## [1] 127.1763
     ## 
     ## $TC3_C3
-    ## [1] 2083.222
+    ## [1] 457.481
     ## 
     ## $TC1_T2
-    ## [1] 1721.347
+    ## [1] 379.9028
     ## 
     ## $TC2_T2
-    ## [1] 3168.633
+    ## [1] 700.205
     ## 
     ## $TC3_T2
-    ## [1] 1523.193
+    ## [1] 335.3681
     ## 
     ## $TC4_T2
-    ## [1] 1479.733
+    ## [1] 325.5711
 
 ``` r
 # Simplify = FALSES stores as a list
@@ -1705,7 +1654,7 @@ for (fish_id in names(pcrit_data)) {
 }
 ```
 
-![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-33-15.png)<!-- -->
+![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-2.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-3.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-4.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-5.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-6.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-7.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-8.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-9.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-10.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-11.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-12.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-13.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-14.png)<!-- -->![](data_org_MBIO621_files/figure-gfm/unnamed-chunk-32-15.png)<!-- -->
 
 ``` r
 #pcrit function
@@ -1730,9 +1679,9 @@ for (fish_id in names(pcrit_data)) {
   # Get the dataframe from pcrit_data
   df <- pcrit_data[[fish_id]]
   
-  if (nrow(df) >= 6) {
+  if (nrow(df) >= 4) {
     # Get the last 6 rows
-    last_6_df <- tail(df, 6)
+    last_6_df <- tail(df, 4)
     
     # Run the linear model
     pcrit_lm <- lm(MO2 ~ avg.po2, data = last_6_df)
@@ -1759,7 +1708,7 @@ print(pcrit_results)
 
     ## $pcrit_TC1_C1
     ## $pcrit_TC1_C1$Pcrit
-    ## [1] "Pcrit =  45.0982768837736"
+    ## [1] "Pcrit =  6.48042668528944"
     ## 
     ## $pcrit_TC1_C1$ModelSummary
     ## 
@@ -1767,25 +1716,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##     38     39     40     41     42     43 
-    ## -8.968  4.534  5.351  9.900 -5.325 -5.492 
+    ##      40      41      42      43 
+    ## -3.1880  7.0032 -3.6585 -0.1567 
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)  
-    ## (Intercept)   33.430     16.846   1.984   0.1182  
-    ## avg.po2        3.933      1.155   3.406   0.0271 *
+    ## (Intercept)   -1.671     21.244  -0.079   0.9445  
+    ## avg.po2        6.835      1.686   4.055   0.0558 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 8.458 on 4 degrees of freedom
-    ## Multiple R-squared:  0.7436, Adjusted R-squared:  0.6795 
-    ## F-statistic:  11.6 on 1 and 4 DF,  p-value: 0.02713
+    ## Residual standard error: 6.026 on 2 degrees of freedom
+    ## Multiple R-squared:  0.8916, Adjusted R-squared:  0.8373 
+    ## F-statistic: 16.44 on 1 and 2 DF,  p-value: 0.05577
     ## 
     ## 
     ## 
     ## $pcrit_TC2_C1
     ## $pcrit_TC2_C1$Pcrit
-    ## [1] "Pcrit =  96.1869525401432"
+    ## [1] "Pcrit =  14.191031695717"
     ## 
     ## $pcrit_TC2_C1$ModelSummary
     ## 
@@ -1793,25 +1742,23 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##     49     50     51     52     53     54 
-    ## -2.333  2.761 -1.191  1.744  1.407 -2.387 
+    ##     51     52     53     54 
+    ## -1.597  1.692  1.701 -1.796 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)  
-    ## (Intercept)   18.888      5.270   3.584   0.0231 *
-    ## avg.po2        2.543      0.557   4.566   0.0103 *
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##             Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)   16.045      8.885   1.806    0.213
+    ## avg.po2        2.878      1.076   2.674    0.116
     ## 
-    ## Residual standard error: 2.51 on 4 degrees of freedom
-    ## Multiple R-squared:  0.839,  Adjusted R-squared:  0.7988 
-    ## F-statistic: 20.85 on 1 and 4 DF,  p-value: 0.01029
+    ## Residual standard error: 2.402 on 2 degrees of freedom
+    ## Multiple R-squared:  0.7814, Adjusted R-squared:  0.6721 
+    ## F-statistic: 7.149 on 1 and 2 DF,  p-value: 0.116
     ## 
     ## 
     ## 
     ## $pcrit_TC3_C1
     ## $pcrit_TC3_C1$Pcrit
-    ## [1] "Pcrit =  96.0062473677603"
+    ## [1] "Pcrit =  15.0244772529873"
     ## 
     ## $pcrit_TC3_C1$ModelSummary
     ## 
@@ -1819,25 +1766,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##     24     25     26     27     28     29 
-    ## -2.557 -2.677  6.648  1.852  2.207 -5.473 
+    ##      26      27      28      29 
+    ## -0.2204 -0.9888  2.9396 -1.7303 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)  21.9531     9.1243   2.406  0.07387 . 
-    ## avg.po2       3.7244     0.5914   6.297  0.00325 **
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)  -2.3884     8.2319  -0.290   0.7990  
+    ## avg.po2       5.6959     0.6253   9.109   0.0118 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 4.903 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9084, Adjusted R-squared:  0.8855 
-    ## F-statistic: 39.65 on 1 and 4 DF,  p-value: 0.00325
+    ## Residual standard error: 2.516 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9765, Adjusted R-squared:  0.9647 
+    ## F-statistic: 82.98 on 1 and 2 DF,  p-value: 0.01184
     ## 
     ## 
     ## 
     ## $pcrit_TC4_C1
     ## $pcrit_TC4_C1$Pcrit
-    ## [1] "Pcrit =  33.6472097680444"
+    ## [1] "Pcrit =  8.84684927514008"
     ## 
     ## $pcrit_TC4_C1$ModelSummary
     ## 
@@ -1845,25 +1792,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##       85       86       87       88       89       90 
-    ##  1.38898 -1.81376  0.04235 -0.05110 -0.15040  0.58393 
+    ##       87       88       89       90 
+    ##  0.15956 -0.09143 -0.33582  0.26770 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -10.7984     3.1405  -3.438 0.026331 *  
-    ## avg.po2       6.9816     0.5925  11.783 0.000297 ***
+    ##             Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)  -9.0543     1.6809  -5.387  0.03278 * 
+    ## avg.po2       6.6363     0.3527  18.818  0.00281 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 1.182 on 4 degrees of freedom
-    ## Multiple R-squared:  0.972,  Adjusted R-squared:  0.965 
-    ## F-statistic: 138.8 on 1 and 4 DF,  p-value: 0.0002968
+    ## Residual standard error: 0.3303 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9944, Adjusted R-squared:  0.9916 
+    ## F-statistic: 354.1 on 1 and 2 DF,  p-value: 0.002812
     ## 
     ## 
     ## 
     ## $pcrit_TC1_C2
     ## $pcrit_TC1_C2$Pcrit
-    ## [1] "Pcrit =  86.0358194290653"
+    ## [1] "Pcrit =  21.2779923526445"
     ## 
     ## $pcrit_TC1_C2$ModelSummary
     ## 
@@ -1871,25 +1818,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##     27     28     29     30     31     32 
-    ## -1.589  1.067  2.435 -3.240  4.033 -2.706 
+    ##     29     30     31     32 
+    ##  1.077 -3.717  4.352 -1.711 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -43.4250     9.4533  -4.594 0.010079 *  
-    ## avg.po2       9.1046     0.7721  11.792 0.000296 ***
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)  -53.294     24.484  -2.177   0.1614  
+    ## avg.po2       10.009      2.207   4.535   0.0453 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 3.304 on 4 degrees of freedom
-    ## Multiple R-squared:  0.972,  Adjusted R-squared:  0.965 
-    ## F-statistic:   139 on 1 and 4 DF,  p-value: 0.000296
+    ## Residual standard error: 4.292 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9114, Adjusted R-squared:  0.8671 
+    ## F-statistic: 20.57 on 1 and 2 DF,  p-value: 0.04534
     ## 
     ## 
     ## 
     ## $pcrit_TC2_C2
     ## $pcrit_TC2_C2$Pcrit
-    ## [1] "Pcrit =  40.988693212037"
+    ## [1] "Pcrit =  7.91943909425888"
     ## 
     ## $pcrit_TC2_C2$ModelSummary
     ## 
@@ -1897,25 +1844,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##       74       75       76       77       78       79 
-    ## -0.43328  0.08779  2.78596 -2.75745 -1.17981  1.49680 
+    ##     76     77     78     79 
+    ##  2.213 -2.981 -1.099  1.867 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)    5.816      4.890   1.189 0.300036    
-    ## avg.po2        6.442      0.579  11.126 0.000371 ***
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)    3.013     12.623   0.239   0.8336  
+    ## avg.po2        6.834      1.701   4.017   0.0567 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 2.19 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9687, Adjusted R-squared:  0.9609 
-    ## F-statistic: 123.8 on 1 and 4 DF,  p-value: 0.0003713
+    ## Residual standard error: 3.039 on 2 degrees of freedom
+    ## Multiple R-squared:  0.8897, Adjusted R-squared:  0.8346 
+    ## F-statistic: 16.14 on 1 and 2 DF,  p-value: 0.05674
     ## 
     ## 
     ## 
     ## $pcrit_TC3_C2
     ## $pcrit_TC3_C2$Pcrit
-    ## [1] "Pcrit =  56.6221618578978"
+    ## [1] "Pcrit =  14.8218302755863"
     ## 
     ## $pcrit_TC3_C2$ModelSummary
     ## 
@@ -1923,25 +1870,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      63      64      65      66      67      68 
-    ##  2.6414 -4.8361  0.3460  2.9453 -0.9842 -0.1123 
+    ##       65       66       67       68 
+    ## -0.99714  2.16574 -1.25049  0.08189 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)  -24.562     13.766  -1.784  0.14895   
-    ## avg.po2        5.824      1.178   4.944  0.00779 **
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)  -33.500     15.779  -2.123   0.1677  
+    ## avg.po2        6.688      1.435   4.662   0.0431 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 3.168 on 4 degrees of freedom
-    ## Multiple R-squared:  0.8594, Adjusted R-squared:  0.8242 
-    ## F-statistic: 24.45 on 1 and 4 DF,  p-value: 0.007792
+    ## Residual standard error: 1.905 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9157, Adjusted R-squared:  0.8736 
+    ## F-statistic: 21.73 on 1 and 2 DF,  p-value: 0.04307
     ## 
     ## 
     ## 
     ## $pcrit_TC4_C2
     ## $pcrit_TC4_C2$Pcrit
-    ## [1] "Pcrit =  100.675382268793"
+    ## [1] "Pcrit =  15.4922864001484"
     ## 
     ## $pcrit_TC4_C2$ModelSummary
     ## 
@@ -1949,25 +1896,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      43      44      45      46      47      48 
-    ## -3.6689  2.4834  1.8784  1.8831  0.4008 -2.9768 
+    ##      45      46      47      48 
+    ## -0.8397  0.8500  0.9716 -0.9819 
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)  26.9260     7.2612   3.708  0.02069 * 
-    ## avg.po2       4.1496     0.5655   7.338  0.00184 **
+    ## (Intercept)  11.7893     5.6948    2.07  0.17428   
+    ## avg.po2       5.5077     0.4979   11.06  0.00807 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 2.988 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9309, Adjusted R-squared:  0.9136 
-    ## F-statistic: 53.85 on 1 and 4 DF,  p-value: 0.001836
+    ## Residual standard error: 1.291 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9839, Adjusted R-squared:  0.9759 
+    ## F-statistic: 122.4 on 1 and 2 DF,  p-value: 0.008074
     ## 
     ## 
     ## 
     ## $pcrit_TC1_C3
     ## $pcrit_TC1_C3$Pcrit
-    ## [1] "Pcrit =  68.2583001112071"
+    ## [1] "Pcrit =  12.3778255752612"
     ## 
     ## $pcrit_TC1_C3$ModelSummary
     ## 
@@ -1975,25 +1922,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      76      77      78      79      80      81 
-    ##  0.8455 -0.5267 -2.3664  2.6743 -0.4346 -0.1920 
+    ##      78      79      80      81 
+    ## -1.7230  2.9280 -0.5525 -0.6525 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)  10.8101     7.0311   1.537 0.198997    
-    ## avg.po2       5.7719     0.6235   9.258 0.000757 ***
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)   16.423     17.159   0.957   0.4395  
+    ## avg.po2        5.229      1.633   3.203   0.0852 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 1.869 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9554, Adjusted R-squared:  0.9443 
-    ## F-statistic:  85.7 on 1 and 4 DF,  p-value: 0.0007571
+    ## Residual standard error: 2.477 on 2 degrees of freedom
+    ## Multiple R-squared:  0.8368, Adjusted R-squared:  0.7553 
+    ## F-statistic: 10.26 on 1 and 2 DF,  p-value: 0.08521
     ## 
     ## 
     ## 
     ## $pcrit_TC2_C3
     ## $pcrit_TC2_C3$Pcrit
-    ## [1] "Pcrit =  138.833933352255"
+    ## [1] "Pcrit =  32.7938317984973"
     ## 
     ## $pcrit_TC2_C3$ModelSummary
     ## 
@@ -2001,25 +1948,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      24      25      26      27      28      29 
-    ## -1.0240  0.9388  0.6029  0.3847 -0.6075 -0.2950 
+    ##        26        27        28        29 
+    ## -0.004981  0.207224 -0.420899  0.218656 
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -27.6628     2.1438  -12.90 0.000208 ***
-    ## avg.po2       6.3246     0.1604   39.43 2.47e-06 ***
+    ## (Intercept) -31.7980     1.8303  -17.37 0.003297 ** 
+    ## avg.po2       6.6749     0.1535   43.48 0.000528 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.8511 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9974, Adjusted R-squared:  0.9968 
-    ## F-statistic:  1554 on 1 and 4 DF,  p-value: 2.472e-06
+    ## Residual standard error: 0.366 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9989, Adjusted R-squared:  0.9984 
+    ## F-statistic:  1891 on 1 and 2 DF,  p-value: 0.0005285
     ## 
     ## 
     ## 
     ## $pcrit_TC3_C3
     ## $pcrit_TC3_C3$Pcrit
-    ## [1] "Pcrit =  38.7134035009303"
+    ## [1] "Pcrit =  9.74612898607911"
     ## 
     ## $pcrit_TC3_C3$ModelSummary
     ## 
@@ -2027,25 +1974,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      85      86      87      88      89      90 
-    ## -0.8317  1.0343  0.4793 -0.1470 -1.0277  0.4930 
+    ##      87      88      89      90 
+    ##  0.3604 -0.1431 -0.9171  0.6999 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -17.5657     3.0334  -5.791  0.00442 ** 
-    ## avg.po2       7.0249     0.4174  16.829 7.31e-05 ***
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept) -19.1823     5.5672  -3.446   0.0749 .
+    ## avg.po2       7.2596     0.8318   8.728   0.0129 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.91 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9861, Adjusted R-squared:  0.9826 
-    ## F-statistic: 283.2 on 1 and 4 DF,  p-value: 7.307e-05
+    ## Residual standard error: 0.8606 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9744, Adjusted R-squared:  0.9616 
+    ## F-statistic: 76.17 on 1 and 2 DF,  p-value: 0.01288
     ## 
     ## 
     ## 
     ## $pcrit_TC1_T2
     ## $pcrit_TC1_T2$Pcrit
-    ## [1] "Pcrit =  38.4516807379294"
+    ## [1] "Pcrit =  11.2415141786076"
     ## 
     ## $pcrit_TC1_T2$ModelSummary
     ## 
@@ -2053,25 +2000,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      18      19      20      21      22      23 
-    ##  1.1682 -0.8996 -1.1274 -0.1381  0.3374  0.6595 
+    ##       20       21       22       23 
+    ## -0.11247  0.16700  0.04631 -0.10084 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -22.8688     1.7961  -12.73 0.000219 ***
-    ## avg.po2       7.7111     0.2214   34.83 4.06e-06 ***
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -18.28303    0.57462  -31.82 0.000986 ***
+    ## avg.po2       7.02320    0.08409   83.52 0.000143 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 1.002 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9967, Adjusted R-squared:  0.9959 
-    ## F-statistic:  1213 on 1 and 4 DF,  p-value: 4.057e-06
+    ## Residual standard error: 0.1626 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9997, Adjusted R-squared:  0.9996 
+    ## F-statistic:  6975 on 1 and 2 DF,  p-value: 0.0001433
     ## 
     ## 
     ## 
     ## $pcrit_TC2_T2
     ## $pcrit_TC2_T2$Pcrit
-    ## [1] "Pcrit =  51.5385965774598"
+    ## [1] "Pcrit =  12.4254045837008"
     ## 
     ## $pcrit_TC2_T2$ModelSummary
     ## 
@@ -2079,25 +2026,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##       27       28       29       30       31       32 
-    ## -0.09483 -0.04173  0.28661 -0.16634  0.36032 -0.34402 
+    ##       29       30       31       32 
+    ##  0.05196 -0.24507  0.41019 -0.21709 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -12.4184     0.6698  -18.54 4.98e-05 ***
-    ## avg.po2       6.8018     0.1612   42.19 1.89e-06 ***
+    ##             Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept) -13.6584     1.7429  -7.837  0.01590 * 
+    ## avg.po2       7.1551     0.4806  14.889  0.00448 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.3036 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9978, Adjusted R-squared:  0.9972 
-    ## F-statistic:  1780 on 1 and 4 DF,  p-value: 1.887e-06
+    ## Residual standard error: 0.3729 on 2 degrees of freedom
+    ## Multiple R-squared:  0.9911, Adjusted R-squared:  0.9866 
+    ## F-statistic: 221.7 on 1 and 2 DF,  p-value: 0.004481
     ## 
     ## 
     ## 
     ## $pcrit_TC3_T2
     ## $pcrit_TC3_T2$Pcrit
-    ## [1] "Pcrit =  51.6986858699443"
+    ## [1] "Pcrit =  11.2712636036912"
     ## 
     ## $pcrit_TC3_T2$ModelSummary
     ## 
@@ -2105,25 +2052,25 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      19      20      21      22      23      24 
-    ## -2.0710  0.1363  1.8792  2.5566  2.5211 -5.0222 
+    ##     21     22     23     24 
+    ## -1.602  1.342  3.200 -2.940 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)  -22.925      7.233  -3.170  0.03387 * 
-    ## avg.po2        6.949      1.058   6.567  0.00278 **
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept)  -40.133     14.539  -2.760   0.1100  
+    ## avg.po2        9.946      2.445   4.067   0.0555 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 3.389 on 4 degrees of freedom
-    ## Multiple R-squared:  0.9151, Adjusted R-squared:  0.8939 
-    ## F-statistic: 43.13 on 1 and 4 DF,  p-value: 0.002782
+    ## Residual standard error: 3.41 on 2 degrees of freedom
+    ## Multiple R-squared:  0.8921, Adjusted R-squared:  0.8382 
+    ## F-statistic: 16.54 on 1 and 2 DF,  p-value: 0.05547
     ## 
     ## 
     ## 
     ## $pcrit_TC4_T2
     ## $pcrit_TC4_T2$Pcrit
-    ## [1] "Pcrit =  67.0054306879903"
+    ## [1] "Pcrit =  31.7073093114447"
     ## 
     ## $pcrit_TC4_T2$ModelSummary
     ## 
@@ -2131,19 +2078,19 @@ print(pcrit_results)
     ## lm(formula = MO2 ~ avg.po2, data = last_6_df)
     ## 
     ## Residuals:
-    ##      16      17      18      19      20      21 
-    ## -3.4708  3.5721  4.0973 -0.5429 -4.6503  0.9947 
+    ##      18      19      20      21 
+    ##  1.4098 -0.9858 -3.6259  3.2018 
     ## 
     ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept) -214.968     43.328  -4.961  0.00770 **
-    ## avg.po2        8.538      1.587   5.381  0.00576 **
+    ##             Estimate Std. Error t value Pr(>|t|)  
+    ## (Intercept) -327.753    112.105  -2.924   0.0998 .
+    ## avg.po2       12.772      4.209   3.034   0.0936 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 4.016 on 4 degrees of freedom
-    ## Multiple R-squared:  0.8786, Adjusted R-squared:  0.8483 
-    ## F-statistic: 28.96 on 1 and 4 DF,  p-value: 0.005763
+    ## Residual standard error: 3.63 on 2 degrees of freedom
+    ## Multiple R-squared:  0.8216, Adjusted R-squared:  0.7323 
+    ## F-statistic: 9.208 on 1 and 2 DF,  p-value: 0.0936
 
 ``` r
 # Create a new list to store only fish_id and Pcrit
@@ -2163,49 +2110,49 @@ print(pcrit_values)
 ```
 
     ## $pcrit_TC1_C1
-    ## [1] "Pcrit =  45.0982768837736"
+    ## [1] "Pcrit =  6.48042668528944"
     ## 
     ## $pcrit_TC2_C1
-    ## [1] "Pcrit =  96.1869525401432"
+    ## [1] "Pcrit =  14.191031695717"
     ## 
     ## $pcrit_TC3_C1
-    ## [1] "Pcrit =  96.0062473677603"
+    ## [1] "Pcrit =  15.0244772529873"
     ## 
     ## $pcrit_TC4_C1
-    ## [1] "Pcrit =  33.6472097680444"
+    ## [1] "Pcrit =  8.84684927514008"
     ## 
     ## $pcrit_TC1_C2
-    ## [1] "Pcrit =  86.0358194290653"
+    ## [1] "Pcrit =  21.2779923526445"
     ## 
     ## $pcrit_TC2_C2
-    ## [1] "Pcrit =  40.988693212037"
+    ## [1] "Pcrit =  7.91943909425888"
     ## 
     ## $pcrit_TC3_C2
-    ## [1] "Pcrit =  56.6221618578978"
+    ## [1] "Pcrit =  14.8218302755863"
     ## 
     ## $pcrit_TC4_C2
-    ## [1] "Pcrit =  100.675382268793"
+    ## [1] "Pcrit =  15.4922864001484"
     ## 
     ## $pcrit_TC1_C3
-    ## [1] "Pcrit =  68.2583001112071"
+    ## [1] "Pcrit =  12.3778255752612"
     ## 
     ## $pcrit_TC2_C3
-    ## [1] "Pcrit =  138.833933352255"
+    ## [1] "Pcrit =  32.7938317984973"
     ## 
     ## $pcrit_TC3_C3
-    ## [1] "Pcrit =  38.7134035009303"
+    ## [1] "Pcrit =  9.74612898607911"
     ## 
     ## $pcrit_TC1_T2
-    ## [1] "Pcrit =  38.4516807379294"
+    ## [1] "Pcrit =  11.2415141786076"
     ## 
     ## $pcrit_TC2_T2
-    ## [1] "Pcrit =  51.5385965774598"
+    ## [1] "Pcrit =  12.4254045837008"
     ## 
     ## $pcrit_TC3_T2
-    ## [1] "Pcrit =  51.6986858699443"
+    ## [1] "Pcrit =  11.2712636036912"
     ## 
     ## $pcrit_TC4_T2
-    ## [1] "Pcrit =  67.0054306879903"
+    ## [1] "Pcrit =  31.7073093114447"
 
 ``` r
 # Remove the 'pcrit_' prefix from the names of pcrit_values

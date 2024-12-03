@@ -554,59 +554,6 @@ list2env(preback_list, envir = .GlobalEnv)
 
 
 ```{r}
-# List of dataframes to update (replace with your actual list of dataframe names)
-dataframe_names <- c("TC1_C1", "TC2_C1", "TC3_C1", "TC4_C1",
-               "TC1_C2", "TC2_C2", "TC3_C2", "TC4_C2",
-               "TC1_C3", "TC2_C3", "TC3_C3",
-               "TC1_T2", "TC2_T2", "TC3_T2", "TC4_T2",
-               "pcrit_TC1_C1", "pcrit_TC2_C1", "pcrit_TC3_C1", "pcrit_TC4_C1",
-               "pcrit_TC1_C2", "pcrit_TC2_C2", "pcrit_TC3_C2", "pcrit_TC4_C2",
-               "pcrit_TC1_C3", "pcrit_TC2_C3", "pcrit_TC3_C3",
-               "pcrit_TC1_T2", "pcrit_TC2_T2", "pcrit_TC3_T2", "pcrit_TC4_T2",
-               "preback_TC1_C1", "preback_TC2_C1", "preback_TC3_C1", "preback_TC4_C1",
-               "preback_TC1_C2", "preback_TC2_C2", "preback_TC3_C2", "preback_TC4_C2",
-               "preback_TC1_C3", "preback_TC2_C3", "preback_TC3_C3",
-               "preback_TC1_T2", "preback_TC2_T2", "preback_TC3_T2", "preback_TC4_T2",
-               "postback_TC1_C1", "postback_TC2_C1", "postback_TC3_C1", "postback_TC4_C1",
-               "postback_TC1_C2", "postback_TC2_C2", "postback_TC3_C2", "postback_TC4_C2",
-               "postback_TC1_C3", "postback_TC2_C3", "postback_TC3_C3",
-               "postback_TC1_T2", "postback_TC2_T2", "postback_TC3_T2", "postback_TC4_T2")
-
-update_mo2 <- function(dataframe_names, meta_data) {
-  for (df_name in dataframe_names) {
-    # Extract the dataframe
-    df <- get(df_name, envir = .GlobalEnv)
-    
-    # Dynamically extract fish_id by removing prefixes like "pcrit_", "preback_", "postback_"
-    fish_id <- sub("^(pcrit_|preback_|postback_)?", "", df_name)
-    
-    # Get the corresponding new_mass value from meta_data
-    weight_g <- meta_data$weight_g[meta_data$fish_id == fish_id]
-    new_mass <- meta_data$new_mass[meta_data$fish_id == fish_id]
-    
-    
-    if (length(new_mass) == 1 && !is.na(new_mass)) {
-      # Calculate true_Vre
-      true_Vre <- (0.170 * 1000) - new_mass
-      
-      # Update the MO2 column
-      df$MO2 <- ((df$MO2 / (0.170 * 1000)) * weight_g) * true_Vre / new_mass
-      
-      # Save the updated dataframe back to its original name
-      assign(df_name, df, envir = .GlobalEnv)
-    } else {
-      message("No matching new_mass found for ", fish_id)
-    }
-  }
-}
-
-
-update_mo2(dataframe_names, meta_data)
-
-```
-
-
-```{r}
 #Now weʻre going to combine pre and post background dfs together
 
 #make a list for postbackground dfs
@@ -1154,9 +1101,9 @@ for (fish_id in names(pcrit_data)) {
   # Get the dataframe from pcrit_data
   df <- pcrit_data[[fish_id]]
   
-  if (nrow(df) >= 6) {
+  if (nrow(df) >= 4) {
     # Get the last 6 rows
-    last_6_df <- tail(df, 6)
+    last_6_df <- tail(df, 4)
     
     # Run the linear model
     pcrit_lm <- lm(MO2 ~ avg.po2, data = last_6_df)
