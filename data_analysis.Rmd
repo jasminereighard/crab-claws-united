@@ -141,21 +141,26 @@ print(metadata)
 MMR_dfs <- data.frame(fish_id = names(all_MMR), MMR = unlist(all_MMR), stringsAsFactors = FALSE)
 SMR_dfs <- data.frame(fish_id = names(all_q20), SMR = unlist(all_q20), stringsAsFactors = FALSE)
 AS_dfs <- data.frame(fish_id = names(aerobic_scope_values), AS = unlist(aerobic_scope_values), stringsAsFactors = FALSE)
-
+pcrit_dfs <- data.frame(fish_id = names(pcrit_values), Pcrit = unlist(pcrit_values), stringsAsFactors = FALSE)
 
 # Merge the metadata dataframe with the newly created dataframes
 respdat <- metadata %>%
   left_join(MMR_dfs, by = "fish_id") %>%
   left_join(SMR_dfs, by = "fish_id") %>%
-  left_join(AS_dfs, by = "fish_id")
+  left_join(AS_dfs, by = "fish_id") %>%
+  left_join(pcrit_dfs, by = "fish_id")
 
+# Clean the Pcrit column to retain only numeric values
+respdat$Pcrit <- as.numeric(gsub("Pcrit = ", "", respdat$Pcrit))
+
+# View the updated dataframe
 respdat
 ```
 
 
 ```{r}
 
-longrespdat <- pivot_longer(respdat, cols = c(SMR, MMR, AS), names_to = "metric", values_to = "value")
+longrespdat <- pivot_longer(respdat, cols = c(SMR, MMR, AS, Pcrit), names_to = "metric", values_to = "value")
 str(longrespdat)
 
 longrespdat$treatment <- as.factor(longrespdat$treatment)

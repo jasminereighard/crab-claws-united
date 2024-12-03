@@ -2146,7 +2146,74 @@ print(pcrit_results)
     ## F-statistic: 28.96 on 1 and 4 DF,  p-value: 0.005763
 
 ``` r
+# Create a new list to store only fish_id and Pcrit
+pcrit_values <- list()
+
+# Extract fish_id and Pcrit from the existing pcrit_results
+for (fish_id in names(pcrit_results)) {
+  # Retrieve the Pcrit value for the current fish_id
+  Pcrit <- pcrit_results[[fish_id]]$Pcrit
+  
+  # Store it in the new list
+  pcrit_values[[fish_id]] <- Pcrit
+}
+
+# Print the simplified list
+print(pcrit_values)
+```
+
+    ## $pcrit_TC1_C1
+    ## [1] "Pcrit =  45.0982768837736"
+    ## 
+    ## $pcrit_TC2_C1
+    ## [1] "Pcrit =  96.1869525401432"
+    ## 
+    ## $pcrit_TC3_C1
+    ## [1] "Pcrit =  96.0062473677603"
+    ## 
+    ## $pcrit_TC4_C1
+    ## [1] "Pcrit =  33.6472097680444"
+    ## 
+    ## $pcrit_TC1_C2
+    ## [1] "Pcrit =  86.0358194290653"
+    ## 
+    ## $pcrit_TC2_C2
+    ## [1] "Pcrit =  40.988693212037"
+    ## 
+    ## $pcrit_TC3_C2
+    ## [1] "Pcrit =  56.6221618578978"
+    ## 
+    ## $pcrit_TC4_C2
+    ## [1] "Pcrit =  100.675382268793"
+    ## 
+    ## $pcrit_TC1_C3
+    ## [1] "Pcrit =  68.2583001112071"
+    ## 
+    ## $pcrit_TC2_C3
+    ## [1] "Pcrit =  138.833933352255"
+    ## 
+    ## $pcrit_TC3_C3
+    ## [1] "Pcrit =  38.7134035009303"
+    ## 
+    ## $pcrit_TC1_T2
+    ## [1] "Pcrit =  38.4516807379294"
+    ## 
+    ## $pcrit_TC2_T2
+    ## [1] "Pcrit =  51.5385965774598"
+    ## 
+    ## $pcrit_TC3_T2
+    ## [1] "Pcrit =  51.6986858699443"
+    ## 
+    ## $pcrit_TC4_T2
+    ## [1] "Pcrit =  67.0054306879903"
+
+``` r
+# Remove the 'pcrit_' prefix from the names of pcrit_values
+names(pcrit_values) <- sub("pcrit_", "", names(pcrit_values))
+```
+
+``` r
 #saving MMR, SMR, and AS
 
-save(all_MMR, all_q20, aerobic_scope_values, file = "mbio621_data.RData")
+save(all_MMR, all_q20, aerobic_scope_values, pcrit_values, file = "mbio621_data.RData")
 ```

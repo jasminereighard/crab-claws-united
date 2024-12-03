@@ -1183,11 +1183,30 @@ print(pcrit_results)
 
 ```
 
+```{r}
+# Create a new list to store only fish_id and Pcrit
+pcrit_values <- list()
+
+# Extract fish_id and Pcrit from the existing pcrit_results
+for (fish_id in names(pcrit_results)) {
+  # Retrieve the Pcrit value for the current fish_id
+  Pcrit <- pcrit_results[[fish_id]]$Pcrit
+  
+  # Store it in the new list
+  pcrit_values[[fish_id]] <- Pcrit
+}
+
+# Print the simplified list
+print(pcrit_values)
+# Remove the 'pcrit_' prefix from the names of pcrit_values
+names(pcrit_values) <- sub("pcrit_", "", names(pcrit_values))
+```
+
 
 ```{r}
 #saving MMR, SMR, and AS
 
-save(all_MMR, all_q20, aerobic_scope_values, file = "mbio621_data.RData")
+save(all_MMR, all_q20, aerobic_scope_values, pcrit_values, file = "mbio621_data.RData")
 
 ```
 
